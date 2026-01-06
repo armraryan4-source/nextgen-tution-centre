@@ -3,28 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NextGen Tuition - Home</title>
+    <title>NextGen Tuition Centre | Home</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #f9f9f9; }
-        header { background-color: #2c3e50; color: white; padding: 30px; text-align: center; }
-        nav { background: #34495e; padding: 15px; text-align: center; sticky; top: 0; }
-        nav a { color: white; text-decoration: none; margin: 0 15px; font-weight: bold; }
-        .container { max-width: 900px; margin: 20px auto; padding: 20px; background: white; border-radius: 8px; }
-        .btn { background: #27ae60; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        /* Basic Styling */
+        body { font-family: 'Arial', sans-serif; line-height: 1.6; margin: 0; color: #333; }
+        header { background: #2c3e50; color: white; padding: 1rem; text-align: center; }
+        nav { background: #34495e; padding: 10px; text-align: center; }
+        nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; }
+        .container { padding: 20px; max-width: 1000px; margin: auto; }
+        section { margin-bottom: 40px; padding: 20px; border-bottom: 1px solid #eee; }
+        h2 { color: #2c3e50; border-left: 5px solid #3498db; padding-left: 10px; }
+
+        /* Fees Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+
+        /* Test Section Styling */
+        .test-box { background: #ecf0f1; padding: 30px; border-radius: 8px; text-align: center; border: 2px dashed #3498db; }
+        .btn-download { background: #e74c3c; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-size: 18px; margin-top: 15px; }
+        .btn-download:hover { background: #c0392b; }
+
+        /* Contact Section */
+        .contact-info { background: #f9f9f9; padding: 20px; border-radius: 8px; }
     </style>
 </head>
 <body>
-    <header><h1>NextGen Tuition Centre</h1></header>
-    <nav>
-        <a href="index.html">Home</a>
-        <a href="fees.html">Fees Structure</a>
-        <a href="tests.html">Tests</a>
-    </nav>
-    <div class="container">
-        <h2>Welcome to NextGen</h2>
-        <p>Quality education for a better future. Hum har student par barabar dhyan dete hain.</p>
-        <h3>Our Address:</h3>
-        <p>📍 Gali no.2 near Saint Rose Public School | 📞 +91 8010595529</p>
-    </div>
+
+<header>
+    <h1>NextGen Tuition Centre</h1>
+    <p>Academic Excellence for Bright Future</p>
+</header>
+
+<nav>
+    <a href="#about">About Us</a>
+    <a href="#courses">Courses</a>
+    <a href="#fees">Fee Structure</a>
+    <a href="#tests">Test Papers</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<div class="container">
+
+    <section id="about">
+        <h2>About Us</h2>
+        <p>Hamara tuition centre Play Way se lekar 10th class tak ke bacho ko behtareen shiksha pradan karta hai. Hum har bache ki progress par dhayan dete hain aur unhe exams ke liye tayyar karte hain.</p>
+    </section>
+
+    <section id="courses">
+        <h2>Courses Offered</h2>
+        <ul>
+            <li><strong>Primary Wing:</strong> Play Way, Nursery, LKG, UKG</li>
+            <li><strong>Junior Wing:</strong> Class 1st to 4th</li>
+            <li><strong>Middle Wing:</strong> Class 5th to 8th</li>
+            <li><strong>Senior Wing:</strong> Class 9th & 10th (Special Batch for Board Exams)</li>
+        </ul>
+    </section>
+
+    <section id="fees">
+        <h2>Fee Structure (Monthly)</h2>
+        <table>
+            <tr>
+                <th>Classes</th>
+                <th>Fees</th>
+            </tr>
+            <tr>
+                <td>Play Way to Nursery</td>
+                <td>₹300</td>
+            </tr>
+            <tr>
+                <td>1st to 4th Class</td>
+                <td>₹400 - ₹500</td>
+            </tr>
+            <tr>
+                <td>5th to 8th Class</td>
+                <td>₹500 - ₹600</td>
+            </tr>
+            <tr>
+                <td>9th & 10th (Per Subject)</td>
+                <td>₹350</td>
+            </tr>
+            <tr>
+                <td>9th & 10th (All Subjects)</td>
+                <td>₹1200</td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="tests">
+        <h2>Practice Tests & PDF</h2>
+        <div class="test-box">
+            <h3>Download Test Question Papers</h3>
+            <p>Bache yahan niche diye gaye link se apne test paper download kar sakte hain aur practice kar sakte hain.</p>
+            <a href="https://drive.google.com/drive/folders/1g1igILXBdoeD0uSkYRFR7jekReuKn_Ym?usp=drive_link" target="_blank" class="btn-download">
+                📥 Click Here for Test Papers (PDF)
+            </a>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact & Address</h2>
+        <div class="contact-info">
+            <p><strong>📍 Address:</strong> [Apna Address Yahan Likhein], Near Main Market</p>
+            <p><strong>📞 Phone:</strong> [Apna Phone Number Likhein]</p>
+            <p><strong>📧 Email:</strong> info@nextgentuition.com</p>
+            <p><strong>⏰ Timing:</strong> 3:00 PM - 8:00 PM</p>
+        </div>
+    </section>
+
+</div>
+
+<footer style="text-align: center; padding: 20px; background: #2c3e50; color: white;">
+    <p>&copy; 2025 NextGen Tuition Centre. All Rights Reserved.</p>
+</footer>
+
 </body>
 </html>

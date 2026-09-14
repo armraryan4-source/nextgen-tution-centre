@@ -1,0 +1,5999 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>GOJO AI</title>
+
+
+<style>
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+
+  margin:0;
+  width:100%;
+  height:100%;
+
+  overflow:hidden;
+
+  background:#000;
+  color:white;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+
+/* ================================================= */
+/* VIDEO */
+/* ================================================= */
+
+.bgVideo{
+
+  position:fixed;
+
+  top:50%;
+  left:50%;
+
+  width:100vh;
+  height:100vw;
+
+  object-fit:cover;
+
+  transform:
+    translate(-50%,-50%)
+    rotate(-90deg);
+
+  z-index:0;
+
+  pointer-events:none;
+
+  opacity:0;
+
+  transition:
+    opacity .4s ease;
+
+  filter:
+    brightness(1.1)
+    contrast(1.12)
+    saturate(1.08);
+
+}
+
+#bgVideo1{
+  opacity:1;
+}
+
+
+/* ================================================= */
+/* OVERLAY */
+/* ================================================= */
+
+.darkOverlay{
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:1;
+
+  background:
+    rgba(0,0,0,.15);
+
+  pointer-events:none;
+
+}
+
+
+/* ================================================= */
+/* STARS */
+/* ================================================= */
+
+#stars{
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:2;
+
+  overflow:hidden;
+
+  pointer-events:none;
+
+}
+
+.star{
+
+  position:absolute;
+
+  width:3px;
+  height:3px;
+
+  border-radius:50%;
+
+  background:#35c9ff;
+
+  box-shadow:
+    0 0 6px #35c9ff,
+    0 0 14px #168cff;
+
+  animation:
+    starFloat linear infinite,
+    starBlink ease-in-out infinite;
+
+}
+
+@keyframes starFloat{
+
+  from{
+    transform:translateY(105vh);
+  }
+
+  to{
+    transform:translateY(-10vh);
+  }
+
+}
+
+@keyframes starBlink{
+
+  0%,100%{
+    opacity:.25;
+  }
+
+  50%{
+    opacity:1;
+  }
+
+}
+
+
+/* ================================================= */
+/* GOJO PROFILE */
+/* ================================================= */
+
+#gojoProfile{
+
+  position:fixed;
+
+  top:12px;
+  right:12px;
+
+  width:135px;
+
+  z-index:20;
+
+  text-align:center;
+
+  transition:
+    transform .3s ease,
+    filter .3s ease;
+
+}
+
+#gojoImageBox{
+
+  position:relative;
+
+  width:110px;
+  height:155px;
+
+  margin:auto;
+
+}
+
+#gojoImage{
+
+  width:110px;
+  height:155px;
+
+  object-fit:cover;
+
+  display:block;
+
+  border-radius:5px;
+
+  border:
+    1px solid
+    rgba(130,100,255,.45);
+
+  box-shadow:
+    0 0 15px
+    rgba(50,100,255,.55);
+
+}
+
+#reactionEmoji{
+
+  position:absolute;
+
+  right:-13px;
+  top:-13px;
+
+  width:52px;
+  height:52px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  border-radius:50%;
+
+  background:
+    rgba(0,0,0,.78);
+
+  border:
+    2px solid
+    rgba(255,255,255,.65);
+
+  box-shadow:
+    0 0 12px
+    rgba(255,255,255,.45),
+    0 0 25px
+    rgba(80,120,255,.65);
+
+  font-size:29px;
+
+  z-index:50;
+
+  opacity:0;
+
+  transform:scale(.3);
+
+  transition:
+    opacity .2s ease,
+    transform .25s ease;
+
+}
+
+#reactionEmoji.show{
+
+  opacity:1;
+
+  transform:scale(1);
+
+  animation:
+    emojiPop .55s ease-out;
+
+}
+
+@keyframes emojiPop{
+
+  0%{
+    transform:
+      scale(.2)
+      rotate(-20deg);
+  }
+
+  60%{
+    transform:
+      scale(1.25)
+      rotate(8deg);
+  }
+
+  100%{
+    transform:
+      scale(1)
+      rotate(0);
+  }
+
+}
+
+#gojoName{
+
+  margin-top:7px;
+
+  font-size:21px;
+
+  font-weight:900;
+
+  letter-spacing:1px;
+
+  text-shadow:
+    0 0 8px #7460ff,
+    0 0 20px #4130ff;
+
+}
+
+#status{
+
+  margin-top:3px;
+
+  font-size:10px;
+
+  color:#8dff68;
+
+}
+
+
+/* ================================================= */
+/* CHAT MEMORY PANEL */
+/* ================================================= */
+
+#chatPanel{
+
+  position:fixed;
+
+  right:17px;
+  bottom:15px;
+
+  width:min(
+    430px,
+    calc(100vw - 30px)
+  );
+
+  z-index:30;
+
+  padding:14px;
+
+  border-radius:20px;
+
+  background:
+    rgba(5,5,12,.86);
+
+  border:
+    1px solid
+    rgba(160,130,255,.35);
+
+  box-shadow:
+    0 0 25px
+    rgba(70,30,255,.28),
+    inset 0 0 25px
+    rgba(120,60,255,.04);
+
+  backdrop-filter:blur(14px);
+
+  transition:
+    transform .35s ease;
+
+}
+
+#chatPanel.hidden{
+
+  transform:
+    translateY(
+      calc(100% - 52px)
+    );
+
+}
+
+
+/* ================================================= */
+/* CHAT HEADER */
+/* ================================================= */
+
+#chatHeader{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  margin-bottom:10px;
+
+}
+
+#chatTitle{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:7px;
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  letter-spacing:1px;
+
+}
+
+.memoryBadge{
+
+  padding:
+    4px 7px;
+
+  border-radius:8px;
+
+  font-size:9px;
+
+  color:#cbbcff;
+
+  background:
+    rgba(110,70,255,.15);
+
+  border:
+    1px solid
+    rgba(140,110,255,.2);
+
+}
+
+.headerButtons{
+
+  display:flex;
+
+  gap:6px;
+
+}
+
+.headerBtn{
+
+  width:32px;
+  height:30px;
+
+  border:none;
+
+  border-radius:8px;
+
+  color:white;
+
+  background:
+    rgba(100,70,255,.35);
+
+  cursor:pointer;
+
+  font-size:15px;
+
+}
+
+.headerBtn:active{
+
+  transform:scale(.92);
+
+}
+
+
+/* ================================================= */
+/* QUESTION */
+/* ================================================= */
+
+#question{
+
+  width:100%;
+
+  min-height:70px;
+
+  max-height:130px;
+
+  resize:none;
+
+  outline:none;
+
+  color:white;
+
+  background:
+    rgba(0,0,0,.60);
+
+  border:
+    1px solid
+    rgba(180,150,255,.25);
+
+  border-radius:15px;
+
+  padding:15px;
+
+  font-size:16px;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+}
+
+#question:focus{
+
+  border-color:
+    rgba(150,110,255,.7);
+
+  box-shadow:
+    0 0 15px
+    rgba(110,70,255,.2);
+
+}
+
+#question::placeholder{
+
+  color:
+    rgba(255,255,255,.45);
+
+}
+
+
+/* ================================================= */
+/* BUTTONS */
+/* ================================================= */
+
+.buttonRow{
+
+  display:flex;
+
+  gap:9px;
+
+  margin-top:10px;
+
+}
+
+.actionBtn{
+
+  height:46px;
+
+  min-width:52px;
+
+  border:none;
+
+  border-radius:12px;
+
+  color:white;
+
+  cursor:pointer;
+
+  font-size:19px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6640ff,
+      #7b2cff
+    );
+
+  box-shadow:
+    0 0 12px
+    rgba(110,70,255,.35);
+
+  transition:
+    transform .15s ease,
+    box-shadow .2s ease;
+
+}
+
+.actionBtn:active{
+
+  transform:scale(.93);
+
+}
+
+.actionBtn:disabled{
+
+  opacity:.55;
+
+}
+
+#sendBtn{
+
+  flex:1;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+}
+
+#micBtn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff1744,
+      #ff005d
+    );
+
+}
+
+#micBtn.listening{
+
+  animation:
+    micPulse .8s infinite;
+
+}
+
+@keyframes micPulse{
+
+  0%{
+    box-shadow:
+      0 0 5px #ff1744;
+  }
+
+  50%{
+    box-shadow:
+      0 0 30px #ff1744;
+  }
+
+  100%{
+    box-shadow:
+      0 0 5px #ff1744;
+  }
+
+}
+
+
+/* ================================================= */
+/* ANSWER */
+/* ================================================= */
+
+#answer{
+
+  margin-top:10px;
+
+  min-height:70px;
+
+  max-height:180px;
+
+  overflow-y:auto;
+
+  padding:13px;
+
+  border-radius:14px;
+
+  background:
+    rgba(0,0,0,.45);
+
+  border:
+    1px solid
+    rgba(140,120,255,.15);
+
+  color:#eeeeff;
+
+  font-size:14px;
+
+  line-height:1.55;
+
+  white-space:pre-wrap;
+
+}
+
+
+/* ================================================= */
+/* MEMORY STATUS */
+/* ================================================= */
+
+#memoryStatus{
+
+  margin-top:7px;
+
+  text-align:center;
+
+  font-size:9px;
+
+  color:
+    rgba(190,175,255,.55);
+
+}
+
+
+/* ================================================= */
+/* MODE BUTTONS */
+/* ================================================= */
+
+.modeBtn{
+
+  position:fixed;
+
+  left:20px;
+
+  z-index:100000;
+
+  padding:
+    11px 15px;
+
+  border:none;
+
+  border-radius:10px;
+
+  color:white;
+
+  font-size:13px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+}
+
+.modeBtn:active{
+
+  transform:scale(.94);
+
+}
+
+#testDomainBtn{
+
+  top:20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6d35ff,
+      #a43cff
+    );
+
+  box-shadow:
+    0 0 15px
+    rgba(120,60,255,.6);
+
+}
+
+#hollowPurpleBtn{
+
+  top:67px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4720ff,
+      #b000ff,
+      #632cff
+    );
+
+  box-shadow:
+    0 0 12px #682cff,
+    0 0 25px
+    rgba(150,40,255,.55);
+
+}
+
+#powerBtn{
+
+  top:114px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7b00ff,
+      #ff00d4
+    );
+
+  box-shadow:
+    0 0 18px #a000ff;
+
+}
+
+#infinityBtn{
+
+  top:161px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #006eff,
+      #00d9ff
+    );
+
+  box-shadow:
+    0 0 18px #00aaff;
+
+}
+
+#redBlueBtn{
+
+  top:208px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ff003c,
+      #6b00ff,
+      #008cff
+    );
+
+  box-shadow:
+    0 0 18px #ff1744;
+
+}
+
+.modeBtn.active{
+
+  animation:
+    modePulse .65s
+    infinite alternate;
+
+}
+
+@keyframes modePulse{
+
+  from{
+    transform:scale(1);
+  }
+
+  to{
+    transform:scale(1.06);
+  }
+
+}
+
+
+/* ================================================= */
+/* MODE SCREENS */
+/* ================================================= */
+
+#warningScreen,
+#calmScreen,
+#hollowPurpleScreen,
+#powerScreen,
+#infinityScreen,
+#redBlueScreen{
+
+  position:fixed;
+
+  inset:0;
+
+  display:none;
+
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+
+  pointer-events:none;
+
+}
+
+
+/* ================================================= */
+/* WARNING */
+/* ================================================= */
+
+#warningScreen{
+
+  z-index:99999;
+
+  background:
+    rgba(25,0,0,.94);
+
+}
+
+#warningScreen.show{
+
+  display:flex;
+
+  animation:
+    warningFlash .45s
+    infinite alternate;
+
+}
+
+.warningStripe{
+
+  position:absolute;
+
+  width:200%;
+
+  height:55px;
+
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      #ffcc00 0 28px,
+      #111 28px 56px
+    );
+
+  opacity:.9;
+
+  animation:
+    stripeMove 1s linear infinite;
+
+}
+
+.warningStripe.top{
+  top:0;
+}
+
+.warningStripe.bottom{
+
+  bottom:0;
+
+  animation-direction:
+    reverse;
+
+}
+
+@keyframes stripeMove{
+
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-56px);
+  }
+
+}
+
+.warningContent{
+
+  position:relative;
+
+  z-index:5;
+
+  width:100%;
+
+  text-align:center;
+
+  animation:
+    warningZoom 5s ease forwards;
+
+}
+
+.warningIcon{
+
+  font-size:
+    clamp(
+      60px,
+      16vw,
+      130px
+    );
+
+  filter:
+    drop-shadow(
+      0 0 20px
+      #ffcc00
+    );
+
+}
+
+.warningText{
+
+  margin-top:20px;
+
+  font-size:
+    clamp(
+      34px,
+      10vw,
+      90px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:
+    clamp(
+      3px,
+      1.5vw,
+      12px
+    );
+
+  text-shadow:
+    0 0 8px #ff0000,
+    0 0 25px #ff0000,
+    0 0 60px #ff7b00;
+
+}
+
+.warningSubText{
+
+  margin-top:12px;
+
+  font-size:
+    clamp(
+      13px,
+      3vw,
+      22px
+    );
+
+  font-weight:bold;
+
+  letter-spacing:5px;
+
+  color:#ffcc00;
+
+}
+
+@keyframes warningFlash{
+
+  from{
+    background:
+      rgba(25,0,0,.94);
+  }
+
+  to{
+    background:
+      rgba(100,0,0,.92);
+  }
+
+}
+
+@keyframes warningZoom{
+
+  0%{
+    transform:scale(.5);
+    opacity:0;
+  }
+
+  12%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  78%{
+    transform:scale(1.04);
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(1.2);
+    opacity:0;
+  }
+
+}
+
+
+/* ================================================= */
+/* CALM */
+/* ================================================= */
+
+#calmScreen{
+
+  z-index:99999;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(90,170,255,.30),
+      rgba(0,10,35,.96)
+    );
+
+}
+
+#calmScreen.show{
+
+  display:flex;
+
+  animation:
+    calmFade 3.5s ease forwards;
+
+}
+
+.calmGlow{
+
+  position:absolute;
+
+  width:100px;
+  height:100px;
+
+  border-radius:50%;
+
+  background:
+    rgba(160,220,255,.9);
+
+  box-shadow:
+    0 0 30px #a5ddff,
+    0 0 80px #65bfff,
+    0 0 160px #3b82f6;
+
+  animation:
+    calmGlow 3.5s
+    ease forwards;
+
+}
+
+.calmCircle{
+
+  position:absolute;
+
+  width:100px;
+  height:100px;
+
+  border-radius:50%;
+
+  border:
+    2px solid
+    rgba(180,230,255,.8);
+
+  animation:
+    calmCircle 3.5s
+    ease-out forwards;
+
+}
+
+.calmCircle.two{
+  animation-delay:.25s;
+}
+
+.calmCircle.three{
+  animation-delay:.5s;
+}
+
+.calmContent{
+
+  position:relative;
+
+  z-index:5;
+
+  text-align:center;
+
+  animation:
+    calmContent 3.5s
+    ease forwards;
+
+}
+
+.calmIcon{
+
+  font-size:
+    clamp(
+      65px,
+      16vw,
+      130px
+    );
+
+}
+
+.calmText{
+
+  margin-top:15px;
+
+  font-size:
+    clamp(
+      32px,
+      8vw,
+      72px
+    );
+
+  font-weight:900;
+
+  letter-spacing:5px;
+
+  color:#e8f8ff;
+
+  text-shadow:
+    0 0 15px #73cfff,
+    0 0 40px #3b82f6;
+
+}
+
+.calmSubText{
+
+  margin-top:10px;
+
+  font-size:
+    clamp(
+      12px,
+      3vw,
+      20px
+    );
+
+  letter-spacing:4px;
+
+  color:#a8ddff;
+
+}
+
+@keyframes calmFade{
+
+  0%{opacity:0;}
+  15%{opacity:1;}
+  75%{opacity:1;}
+  100%{opacity:0;}
+
+}
+
+@keyframes calmGlow{
+
+  0%{
+    transform:scale(.1);
+    opacity:0;
+  }
+
+  20%{
+    transform:scale(1);
+    opacity:.9;
+  }
+
+  100%{
+    transform:scale(14);
+    opacity:0;
+  }
+
+}
+
+@keyframes calmCircle{
+
+  0%{
+    transform:scale(.2);
+    opacity:0;
+  }
+
+  20%{
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(15);
+    opacity:0;
+  }
+
+}
+
+@keyframes calmContent{
+
+  0%{
+    transform:scale(.7);
+    opacity:0;
+  }
+
+  20%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  75%{
+    transform:scale(1.03);
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(1.12);
+    opacity:0;
+  }
+
+}
+
+
+/* ================================================= */
+/* HOLLOW PURPLE */
+/* ================================================= */
+
+#hollowPurpleScreen{
+
+  z-index:99998;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(150,0,255,.78),
+      rgba(40,0,100,.88) 35%,
+      rgba(5,0,20,.97) 75%
+    );
+
+}
+
+#hollowPurpleScreen.show{
+
+  display:flex;
+
+  animation:
+    hollowPurpleFade
+    2.8s ease forwards;
+
+}
+
+.purpleCore{
+
+  position:absolute;
+
+  width:80px;
+  height:80px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(
+      circle,
+      white 0%,
+      #dcb6ff 12%,
+      #a000ff 38%,
+      #5420ff 68%,
+      transparent 75%
+    );
+
+  box-shadow:
+    0 0 25px white,
+    0 0 60px #c000ff,
+    0 0 130px #722cff,
+    0 0 220px #3510ff;
+
+  animation:
+    purpleCore 2.8s
+    ease forwards;
+
+}
+
+.purpleRing{
+
+  position:absolute;
+
+  width:100px;
+  height:100px;
+
+  border-radius:50%;
+
+  border:
+    3px solid
+    rgba(190,80,255,.9);
+
+  box-shadow:
+    0 0 20px #9d32ff,
+    inset 0 0 20px #4c00ff;
+
+  animation:
+    purpleRing 2.8s
+    ease-out forwards;
+
+}
+
+.purpleRing.two{
+
+  border-color:
+    rgba(80,150,255,.8);
+
+  animation-delay:.15s;
+
+}
+
+.purpleRing.three{
+
+  border-color:
+    rgba(255,80,255,.7);
+
+  animation-delay:.3s;
+
+}
+
+.purpleEnergy{
+
+  position:absolute;
+
+  width:20px;
+  height:160px;
+
+  border-radius:50%;
+
+  background:
+    linear-gradient(
+      transparent,
+      #9d4dff,
+      white,
+      #b000ff,
+      transparent
+    );
+
+  filter:blur(5px);
+
+  opacity:.85;
+
+  animation:
+    energySpin 1s
+    linear infinite;
+
+}
+
+.purpleEnergy.e2{
+  transform:rotate(60deg);
+}
+
+.purpleEnergy.e3{
+  transform:rotate(120deg);
+}
+
+.purpleEnergy.e4{
+  transform:rotate(180deg);
+}
+
+.purpleContent{
+
+  position:relative;
+
+  z-index:10;
+
+  text-align:center;
+
+  animation:
+    purpleContent 2.8s
+    ease forwards;
+
+}
+
+.purpleIcon{
+
+  font-size:
+    clamp(
+      65px,
+      17vw,
+      140px
+    );
+
+}
+
+.purpleText{
+
+  margin-top:12px;
+
+  font-size:
+    clamp(
+      30px,
+      8vw,
+      78px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:
+    clamp(
+      3px,
+      1vw,
+      10px
+    );
+
+  color:#fff;
+
+  text-shadow:
+    0 0 10px white,
+    0 0 25px #d000ff,
+    0 0 55px #762cff,
+    0 0 100px #3910ff;
+
+}
+
+.purpleSubText{
+
+  margin-top:12px;
+
+  font-size:
+    clamp(
+      12px,
+      3vw,
+      20px
+    );
+
+  letter-spacing:5px;
+
+  font-weight:bold;
+
+  color:#dfc8ff;
+
+}
+
+@keyframes hollowPurpleFade{
+
+  0%{opacity:0;}
+  12%{opacity:1;}
+  72%{opacity:1;}
+  100%{opacity:0;}
+
+}
+
+@keyframes purpleCore{
+
+  0%{
+    transform:scale(.1);
+    opacity:0;
+  }
+
+  18%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  70%{
+    transform:scale(2.2);
+    opacity:.95;
+  }
+
+  100%{
+    transform:scale(18);
+    opacity:0;
+  }
+
+}
+
+@keyframes purpleRing{
+
+  0%{
+    transform:scale(.1);
+    opacity:0;
+  }
+
+  15%{
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(18);
+    opacity:0;
+  }
+
+}
+
+@keyframes energySpin{
+
+  from{
+    transform:
+      rotate(0deg)
+      translateY(-15px);
+  }
+
+  to{
+    transform:
+      rotate(360deg)
+      translateY(-15px);
+  }
+
+}
+
+@keyframes purpleContent{
+
+  0%{
+    transform:scale(.3);
+    opacity:0;
+  }
+
+  15%{
+    transform:scale(1);
+    opacity:1;
+  }
+
+  70%{
+    transform:scale(1.05);
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(1.2);
+    opacity:0;
+  }
+
+}
+
+
+/* ================================================= */
+/* POWER */
+/* ================================================= */
+
+#powerScreen{
+
+  z-index:99997;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(180,0,255,.8),
+      rgba(70,0,140,.75) 35%,
+      rgba(5,0,20,.97) 75%
+    );
+
+}
+
+#powerScreen.show{
+
+  display:flex;
+
+  animation:
+    powerFade 3s ease forwards;
+
+}
+
+.powerAura{
+
+  position:absolute;
+
+  width:150px;
+  height:150px;
+
+  border-radius:50%;
+
+  border:
+    8px solid
+    #a000ff;
+
+  box-shadow:
+    0 0 25px #ff00e6,
+    0 0 80px #7b00ff,
+    inset 0 0 35px #c000ff;
+
+  animation:
+    powerAura 3s
+    ease-out forwards;
+
+}
+
+.powerAura.two{
+
+  width:300px;
+  height:300px;
+
+  border-color:#ff00aa;
+
+  animation-delay:.15s;
+
+}
+
+.powerAura.three{
+
+  width:500px;
+  height:500px;
+
+  border-color:#7200ff;
+
+  animation-delay:.3s;
+
+}
+
+.powerBolt{
+
+  position:absolute;
+
+  width:8px;
+  height:300px;
+
+  background:
+    linear-gradient(
+      transparent,
+      white,
+      #d000ff,
+      transparent
+    );
+
+  box-shadow:
+    0 0 20px #c000ff;
+
+  animation:
+    powerSpin .8s
+    linear infinite;
+
+}
+
+.powerBolt.b2{
+  transform:rotate(45deg);
+}
+
+.powerBolt.b3{
+  transform:rotate(90deg);
+}
+
+.powerBolt.b4{
+  transform:rotate(135deg);
+}
+
+.powerContent{
+
+  position:relative;
+
+  z-index:10;
+
+  text-align:center;
+
+}
+
+.powerIcon{
+
+  font-size:
+    clamp(
+      70px,
+      18vw,
+      150px
+    );
+
+}
+
+.powerText{
+
+  font-size:
+    clamp(
+      38px,
+      9vw,
+      85px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:7px;
+
+}
+
+.powerSub{
+
+  margin-top:10px;
+
+  font-size:
+    clamp(
+      12px,
+      3vw,
+      22px
+    );
+
+  letter-spacing:5px;
+
+  color:#efc8ff;
+
+}
+
+@keyframes powerFade{
+
+  0%{opacity:0;}
+  10%{opacity:1;}
+  75%{opacity:1;}
+  100%{opacity:0;}
+
+}
+
+@keyframes powerAura{
+
+  0%{
+    transform:
+      scale(.1)
+      rotate(0deg);
+
+    opacity:0;
+  }
+
+  20%{
+    opacity:1;
+  }
+
+  100%{
+    transform:
+      scale(7)
+      rotate(360deg);
+
+    opacity:0;
+  }
+
+}
+
+@keyframes powerSpin{
+
+  from{
+    transform:rotate(0deg);
+  }
+
+  to{
+    transform:rotate(360deg);
+  }
+
+}
+
+
+/* ================================================= */
+/* INFINITY */
+/* ================================================= */
+
+#infinityScreen{
+
+  z-index:99996;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(0,150,255,.55),
+      rgba(0,30,90,.75) 40%,
+      rgba(0,0,15,.98) 80%
+    );
+
+}
+
+#infinityScreen.show{
+
+  display:flex;
+
+  animation:
+    infinityFade
+    3.5s ease forwards;
+
+}
+
+.infinityRing{
+
+  position:absolute;
+
+  width:100px;
+  height:100px;
+
+  border-radius:50%;
+
+  border:
+    3px solid
+    #5ce7ff;
+
+  box-shadow:
+    0 0 20px #00cfff,
+    inset 0 0 20px #008cff;
+
+  animation:
+    infinityExpand
+    3.5s ease-out forwards;
+
+}
+
+.infinityRing.r2{
+  animation-delay:.2s;
+}
+
+.infinityRing.r3{
+  animation-delay:.4s;
+}
+
+.infinityRing.r4{
+  animation-delay:.6s;
+}
+
+.infinitySymbol{
+
+  position:absolute;
+
+  font-size:
+    clamp(
+      100px,
+      28vw,
+      230px
+    );
+
+  font-weight:900;
+
+  color:#d9faff;
+
+  text-shadow:
+    0 0 15px white,
+    0 0 35px #00cfff,
+    0 0 80px #0066ff,
+    0 0 130px #003cff;
+
+}
+
+.infinityContent{
+
+  position:relative;
+
+  z-index:10;
+
+  text-align:center;
+
+  margin-top:250px;
+
+}
+
+.infinityText{
+
+  font-size:
+    clamp(
+      34px,
+      9vw,
+      82px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:8px;
+
+}
+
+.infinitySub{
+
+  margin-top:10px;
+
+  font-size:
+    clamp(
+      12px,
+      3vw,
+      20px
+    );
+
+  letter-spacing:5px;
+
+  color:#a8efff;
+
+}
+
+@keyframes infinityFade{
+
+  0%{opacity:0;}
+  12%{opacity:1;}
+  80%{opacity:1;}
+  100%{opacity:0;}
+
+}
+
+@keyframes infinityExpand{
+
+  0%{
+    transform:scale(.1);
+    opacity:0;
+  }
+
+  20%{
+    opacity:1;
+  }
+
+  100%{
+    transform:scale(18);
+    opacity:0;
+  }
+
+}
+
+
+/* ================================================= */
+/* RED BLUE */
+/* ================================================= */
+
+#redBlueScreen{
+
+  z-index:99995;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,0,45,.78),
+      rgba(40,0,80,.65),
+      rgba(0,110,255,.78)
+    );
+
+}
+
+#redBlueScreen.show{
+
+  display:flex;
+
+  animation:
+    redBlueFade
+    3.5s ease forwards;
+
+}
+
+.redOrb,
+.blueOrb{
+
+  position:absolute;
+
+  width:150px;
+  height:150px;
+
+  border-radius:50%;
+
+  top:50%;
+
+  transform:
+    translateY(-50%);
+
+}
+
+.redOrb{
+
+  left:20%;
+
+  background:
+    radial-gradient(
+      circle,
+      white,
+      #ff7890 15%,
+      #ff003c 45%,
+      transparent 75%
+    );
+
+  box-shadow:
+    0 0 30px #ff003c,
+    0 0 100px #ff003c;
+
+}
+
+.blueOrb{
+
+  right:20%;
+
+  background:
+    radial-gradient(
+      circle,
+      white,
+      #75ddff 15%,
+      #006eff 45%,
+      transparent 75%
+    );
+
+  box-shadow:
+    0 0 30px #008cff,
+    0 0 100px #006eff;
+
+}
+
+.redBlueCore{
+
+  position:absolute;
+
+  width:80px;
+  height:80px;
+
+  border-radius:50%;
+
+  background:white;
+
+  box-shadow:
+    0 0 30px white,
+    0 0 80px #ff00aa,
+    0 0 120px #006eff;
+
+}
+
+.redBlueContent{
+
+  position:relative;
+
+  z-index:10;
+
+  text-align:center;
+
+}
+
+.redBlueIcon{
+
+  font-size:
+    clamp(
+      70px,
+      17vw,
+      140px
+    );
+
+}
+
+.redBlueText{
+
+  font-size:
+    clamp(
+      28px,
+      8vw,
+      75px
+    );
+
+  font-weight:1000;
+
+  letter-spacing:6px;
+
+}
+
+.redBlueSub{
+
+  margin-top:12px;
+
+  font-size:
+    clamp(
+      12px,
+      3vw,
+      20px
+    );
+
+  letter-spacing:5px;
+
+}
+
+@keyframes redBlueFade{
+
+  0%{opacity:0;}
+  10%{opacity:1;}
+  75%{opacity:1;}
+  100%{opacity:0;}
+
+}
+
+
+/* ================================================= */
+/* REACTIONS */
+/* ================================================= */
+
+#gojoProfile.thinkingReaction{
+
+  animation:
+    thinkingReaction
+    1.2s ease-in-out infinite;
+
+}
+
+@keyframes thinkingReaction{
+
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.08);
+  }
+
+}
+
+#gojoProfile.happyReaction{
+
+  animation:
+    happyReaction
+    1s ease-in-out infinite;
+
+}
+
+@keyframes happyReaction{
+
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.1);
+  }
+
+}
+
+#gojoProfile.powerReaction{
+
+  animation:
+    powerReaction
+    .7s ease-in-out infinite;
+
+}
+
+@keyframes powerReaction{
+
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.13);
+  }
+
+}
+
+#gojoProfile.funnyReaction{
+
+  animation:
+    funnyReaction
+    .55s ease-in-out infinite;
+
+}
+
+@keyframes funnyReaction{
+
+  0%,100%{
+    transform:rotate(0deg) scale(1);
+  }
+
+  25%{
+    transform:rotate(-7deg) scale(1.08);
+  }
+
+  75%{
+    transform:rotate(7deg) scale(1.08);
+  }
+
+}
+
+#gojoProfile.surprisedReaction{
+
+  animation:
+    surprisedReaction
+    .7s ease-in-out infinite;
+
+}
+
+@keyframes surprisedReaction{
+
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.16);
+  }
+
+}
+
+#gojoProfile.alertReaction{
+
+  animation:
+    alertReaction
+    .45s ease-in-out infinite;
+
+}
+
+@keyframes alertReaction{
+
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.1);
+  }
+
+}
+
+
+/* ================================================= */
+/* MOBILE */
+/* ================================================= */
+
+@media(max-width:600px){
+
+  #gojoProfile{
+
+    top:8px;
+    right:8px;
+
+    width:100px;
+
+  }
+
+  #gojoImageBox{
+
+    width:80px;
+    height:112px;
+
+  }
+
+  #gojoImage{
+
+    width:80px;
+    height:112px;
+
+  }
+
+  #reactionEmoji{
+
+    width:42px;
+    height:42px;
+
+    right:-10px;
+    top:-10px;
+
+    font-size:24px;
+
+  }
+
+  #gojoName{
+    font-size:16px;
+  }
+
+  #status{
+    font-size:8px;
+  }
+
+  #chatPanel{
+
+    right:8px;
+    bottom:8px;
+
+    width:
+      calc(100vw - 16px);
+
+    padding:10px;
+
+  }
+
+  #question{
+    min-height:58px;
+  }
+
+  .modeBtn{
+
+    left:10px;
+
+    padding:
+      8px 10px;
+
+    font-size:10px;
+
+  }
+
+  #testDomainBtn{
+    top:10px;
+  }
+
+  #hollowPurpleBtn{
+    top:50px;
+  }
+
+  #powerBtn{
+    top:90px;
+  }
+
+  #infinityBtn{
+    top:130px;
+  }
+
+  #redBlueBtn{
+    top:170px;
+  }
+
+  .infinityContent{
+    margin-top:210px;
+  }
+
+}
+/* ================================================= */
+/* NOTES SYSTEM */
+/* ================================================= */
+
+#notesBtn{
+  position:fixed;
+  left:20px;
+  top:255px;
+  z-index:100000;
+
+  padding:11px 15px;
+
+  border:none;
+  border-radius:10px;
+
+  color:white;
+  font-size:13px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00a8ff,
+      #6c35ff
+    );
+
+  box-shadow:
+    0 0 15px
+    rgba(0,170,255,.55);
+
+  transition:.2s;
+}
+
+#notesBtn:active{
+  transform:scale(.94);
+}
+
+
+/* NOTES PANEL */
+
+#notesPanel{
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:200000;
+
+  display:none;
+
+  background:
+    rgba(3,3,12,.96);
+
+  backdrop-filter:blur(18px);
+
+  padding:20px;
+}
+
+#notesPanel.show{
+  display:flex;
+}
+
+
+/* NOTES APP */
+
+.notesApp{
+
+  width:100%;
+  height:100%;
+
+  max-width:1100px;
+
+  margin:auto;
+
+  display:flex;
+  flex-direction:column;
+
+  border-radius:20px;
+
+  overflow:hidden;
+
+  background:
+    rgba(10,10,25,.95);
+
+  border:
+    1px solid
+    rgba(120,100,255,.35);
+
+  box-shadow:
+    0 0 40px
+    rgba(70,30,255,.35);
+}
+
+
+/* NOTES HEADER */
+
+.notesHeader{
+
+  min-height:65px;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  padding:
+    12px 18px;
+
+  border-bottom:
+    1px solid
+    rgba(150,130,255,.2);
+}
+
+.notesTitle{
+
+  font-size:20px;
+
+  font-weight:900;
+
+  letter-spacing:1px;
+}
+
+.notesHeaderButtons{
+
+  display:flex;
+
+  gap:8px;
+}
+
+.notesHeaderBtn{
+
+  border:none;
+
+  border-radius:9px;
+
+  padding:9px 12px;
+
+  color:white;
+
+  background:
+    rgba(100,70,255,.35);
+
+  cursor:pointer;
+
+}
+
+.notesHeaderBtn:active{
+  transform:scale(.94);
+}
+
+
+/* NOTES BODY */
+
+.notesBody{
+
+  flex:1;
+
+  min-height:0;
+
+  display:flex;
+}
+
+
+/* SIDEBAR */
+
+.notesSidebar{
+
+  width:310px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  border-right:
+    1px solid
+    rgba(150,130,255,.18);
+}
+
+.notesTools{
+
+  padding:12px;
+
+  display:flex;
+
+  gap:8px;
+}
+
+#noteSearch{
+
+  flex:1;
+
+  min-width:0;
+
+  border:none;
+  outline:none;
+
+  color:white;
+
+  background:
+    rgba(0,0,0,.5);
+
+  border:
+    1px solid
+    rgba(150,130,255,.25);
+
+  border-radius:10px;
+
+  padding:10px;
+}
+
+#newNoteBtn{
+
+  border:none;
+
+  border-radius:10px;
+
+  width:44px;
+
+  color:white;
+
+  background:
+    linear-gradient(
+      135deg,
+      #6640ff,
+      #9d35ff
+    );
+
+  font-size:20px;
+
+  cursor:pointer;
+}
+
+
+/* NOTE LIST */
+
+#notesList{
+
+  flex:1;
+
+  overflow-y:auto;
+
+  padding:8px;
+}
+
+.noteItem{
+
+  position:relative;
+
+  padding:12px;
+
+  margin-bottom:8px;
+
+  border-radius:12px;
+
+  cursor:pointer;
+
+  background:
+    rgba(255,255,255,.045);
+
+  border:
+    1px solid
+    transparent;
+
+  transition:.2s;
+}
+
+.noteItem:hover{
+
+  background:
+    rgba(120,90,255,.12);
+
+}
+
+.noteItem.active{
+
+  border-color:
+    rgba(140,110,255,.55);
+
+  background:
+    rgba(110,80,255,.16);
+
+}
+
+.noteItemTitle{
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+}
+
+.noteItemPreview{
+
+  margin-top:5px;
+
+  font-size:11px;
+
+  color:
+    rgba(255,255,255,.5);
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+}
+
+.noteItemDate{
+
+  margin-top:7px;
+
+  font-size:9px;
+
+  color:
+    rgba(190,180,255,.5);
+}
+
+
+/* EDITOR */
+
+.notesEditor{
+
+  flex:1;
+
+  min-width:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  padding:18px;
+}
+
+#noteTitle{
+
+  width:100%;
+
+  border:none;
+
+  outline:none;
+
+  color:white;
+
+  background:transparent;
+
+  font-size:25px;
+
+  font-weight:bold;
+
+  padding:8px 0;
+
+}
+
+#noteTitle::placeholder{
+
+  color:
+    rgba(255,255,255,.3);
+
+}
+
+#noteContent{
+
+  flex:1;
+
+  width:100%;
+
+  resize:none;
+
+  border:none;
+
+  outline:none;
+
+  color:#eee;
+
+  background:transparent;
+
+  font-family:Arial,Helvetica,sans-serif;
+
+  font-size:15px;
+
+  line-height:1.6;
+
+  padding:10px 0;
+}
+
+#noteContent::placeholder{
+
+  color:
+    rgba(255,255,255,.3);
+
+}
+
+
+/* EDITOR FOOTER */
+
+.notesFooter{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  gap:10px;
+
+  padding-top:10px;
+
+  border-top:
+    1px solid
+    rgba(150,130,255,.15);
+}
+
+.noteFooterLeft{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:8px;
+}
+
+.noteFooterRight{
+
+  display:flex;
+
+  gap:8px;
+}
+
+.noteActionBtn{
+
+  border:none;
+
+  border-radius:9px;
+
+  padding:9px 13px;
+
+  color:white;
+
+  cursor:pointer;
+
+  background:
+    rgba(100,70,255,.3);
+}
+
+#pinNoteBtn.pinned{
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff9d00,
+      #ff3c00
+    );
+}
+
+#deleteNoteBtn{
+
+  background:
+    rgba(255,40,70,.3);
+}
+
+#saveNoteBtn{
+
+  background:
+    linear-gradient(
+      135deg,
+      #6640ff,
+      #8c35ff
+    );
+}
+
+#noteUpdated{
+
+  font-size:10px;
+
+  color:
+    rgba(190,180,255,.5);
+}
+
+
+/* EMPTY */
+
+.notesEmpty{
+
+  flex:1;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  text-align:center;
+
+  color:
+    rgba(255,255,255,.4);
+
+  font-size:14px;
+
+}
+
+
+/* MOBILE NOTES */
+
+@media(max-width:600px){
+
+  #notesBtn{
+
+    left:10px;
+    top:210px;
+
+    padding:8px 10px;
+
+    font-size:10px;
+  }
+
+  #notesPanel{
+
+    padding:8px;
+  }
+
+  .notesApp{
+
+    border-radius:14px;
+  }
+
+  .notesHeader{
+
+    min-height:55px;
+
+    padding:10px;
+  }
+
+  .notesTitle{
+
+    font-size:16px;
+  }
+
+  .notesBody{
+
+    flex-direction:column;
+  }
+
+  .notesSidebar{
+
+    width:100%;
+
+    height:180px;
+
+    min-height:180px;
+
+    border-right:none;
+
+    border-bottom:
+      1px solid
+      rgba(150,130,255,.18);
+  }
+
+  .notesEditor{
+
+    padding:12px;
+  }
+
+  #noteTitle{
+
+    font-size:20px;
+  }
+
+  #noteContent{
+
+    font-size:14px;
+  }
+
+  .notesFooter{
+
+    flex-wrap:wrap;
+  }
+
+  #noteUpdated{
+
+    width:100%;
+    order:3;
+  }
+
+}
+
+</style>
+
+</head>
+
+<!-- ================================================= -->
+<!-- NOTES BUTTON -->
+<!-- ================================================= -->
+
+<button
+  id="notesBtn"
+  class="modeBtn"
+  onclick="openNotes()">
+
+  📝 NOTES
+
+</button>
+
+
+<!-- ================================================= -->
+<!-- NOTES PANEL -->
+<!-- ================================================= -->
+
+<div id="notesPanel">
+
+  <div class="notesApp">
+
+    <!-- HEADER -->
+
+    <div class="notesHeader">
+
+      <div class="notesTitle">
+        📝 GOJO NOTES
+      </div>
+
+      <div class="notesHeaderButtons">
+
+        <button
+          class="notesHeaderBtn"
+          onclick="openNewNote()">
+
+          ➕ New
+
+        </button>
+
+        <button
+          class="notesHeaderBtn"
+          onclick="closeNotes()">
+
+          ✕
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div class="notesBody">
+
+
+      <!-- SIDEBAR -->
+
+      <div class="notesSidebar">
+
+        <div class="notesTools">
+
+          <input
+            id="noteSearch"
+            type="text"
+            placeholder="🔍 Search notes..."
+            autocomplete="off">
+
+          <button
+            id="newNoteBtn"
+            onclick="openNewNote()">
+
+            +
+
+          </button>
+
+        </div>
+
+
+        <div id="notesList"></div>
+
+      </div>
+
+
+      <!-- EDITOR -->
+
+      <div class="notesEditor">
+
+        <input
+          id="noteTitle"
+          type="text"
+          placeholder="Note title..."
+          autocomplete="off">
+
+
+        <textarea
+          id="noteContent"
+          placeholder="Start writing your note..."
+          autocomplete="off"></textarea>
+
+
+        <div class="notesFooter">
+
+          <div class="noteFooterLeft">
+
+            <button
+              id="pinNoteBtn"
+              class="noteActionBtn"
+              onclick="togglePinNote()">
+
+              📌 Pin
+
+            </button>
+
+            <span id="noteUpdated">
+              No note selected
+            </span>
+
+          </div>
+
+
+          <div class="noteFooterRight">
+
+            <button
+              id="deleteNoteBtn"
+              class="noteActionBtn"
+              onclick="deleteCurrentNote()">
+
+              🗑️ Delete
+
+            </button>
+
+
+            <button
+              id="saveNoteBtn"
+              class="noteActionBtn"
+              onclick="saveCurrentNote()">
+
+              💾 Save
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<body>
+
+
+<!-- ================================================= -->
+<!-- VIDEOS -->
+<!-- ================================================= -->
+
+<video
+  id="bgVideo1"
+  class="bgVideo"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto">
+
+  <source
+    src="https://raw.githubusercontent.com/armraryan4-source/nextgen-tution-centre/main/VID-20260913-WA0005.mp4"
+    type="video/mp4">
+
+</video>
+
+
+<video
+  id="bgVideo2"
+  class="bgVideo"
+  loop
+  playsinline
+  preload="auto">
+
+  <source
+    src="https://raw.githubusercontent.com/armraryan4-source/nextgen-tution-centre/main/VID-20260913-WA0010.mp4"
+    type="video/mp4">
+
+</video>
+
+
+<div class="darkOverlay"></div>
+
+<div id="stars"></div>
+
+
+<!-- ================================================= -->
+<!-- GOJO -->
+<!-- ================================================= -->
+
+<div id="gojoProfile">
+
+  <div id="gojoImageBox">
+
+    <img
+      id="gojoImage"
+      src="https://raw.githubusercontent.com/armraryan4-source/nextgen-tution-centre/main/IMG-20260913-WA0000.jpg"
+      alt="GOJO">
+
+    <div id="reactionEmoji">
+      🧠
+    </div>
+
+  </div>
+
+  <div id="gojoName">
+    GOJO
+  </div>
+
+  <div id="status">
+    🟢 GOJO ONLINE
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- CHAT -->
+<!-- ================================================= -->
+
+<div id="chatPanel">
+
+  <div id="chatHeader">
+
+    <div id="chatTitle">
+
+      🤖 GOJO AI
+
+      <span class="memoryBadge">
+        🧠 MEMORY
+      </span>
+
+    </div>
+
+
+    <div class="headerButtons">
+
+      <button
+        class="headerBtn"
+        onclick="clearMemory()"
+        title="Clear Memory">
+
+        🗑️
+
+      </button>
+
+
+      <button
+        class="headerBtn"
+        id="hideBtn"
+        onclick="toggleChat()">
+
+        ▼
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <textarea
+    id="question"
+    placeholder="Ask GOJO anything..."
+    autocomplete="off"></textarea>
+
+
+  <div class="buttonRow">
+
+    <button
+      class="actionBtn"
+      id="sendBtn"
+      onclick="sendQuestion()">
+
+      ➤
+
+    </button>
+
+
+    <button
+      class="actionBtn"
+      id="micBtn"
+      onclick="startMic()">
+
+      🎙️
+
+    </button>
+
+  </div>
+
+
+  <div id="answer">
+
+    Konnichiwa! 👋
+    Main GOJO AI hoon.
+    Kuch bhi pucho.
+
+  </div>
+
+
+  <div id="memoryStatus">
+
+    🧠 Memory ready
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- WARNING -->
+<!-- ================================================= -->
+
+<div id="warningScreen">
+
+  <div class="warningStripe top"></div>
+
+  <div class="warningStripe bottom"></div>
+
+  <div class="warningContent">
+
+    <div class="warningIcon">
+      ⚠️
+    </div>
+
+    <div class="warningText">
+      WARNING
+    </div>
+
+    <div class="warningSubText">
+      SYSTEM MODE CHANGE
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- CALM -->
+<!-- ================================================= -->
+
+<div id="calmScreen">
+
+  <div class="calmGlow"></div>
+
+  <div class="calmCircle"></div>
+  <div class="calmCircle two"></div>
+  <div class="calmCircle three"></div>
+
+  <div class="calmContent">
+
+    <div class="calmIcon">
+      😌
+    </div>
+
+    <div class="calmText">
+      CALM
+    </div>
+
+    <div class="calmSubText">
+      RETURNING TO NORMAL
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- HOLLOW PURPLE -->
+<!-- ================================================= -->
+
+<div id="hollowPurpleScreen">
+
+  <div class="purpleCore"></div>
+
+  <div class="purpleRing"></div>
+  <div class="purpleRing two"></div>
+  <div class="purpleRing three"></div>
+
+  <div class="purpleEnergy"></div>
+  <div class="purpleEnergy e2"></div>
+  <div class="purpleEnergy e3"></div>
+  <div class="purpleEnergy e4"></div>
+
+  <div class="purpleContent">
+
+    <div class="purpleIcon">
+      🟣
+    </div>
+
+    <div class="purpleText">
+      HOLLOW PURPLE
+    </div>
+
+    <div class="purpleSubText">
+      TECHNIQUE ACTIVATED
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- POWER -->
+<!-- ================================================= -->
+
+<div id="powerScreen">
+
+  <div class="powerAura"></div>
+  <div class="powerAura two"></div>
+  <div class="powerAura three"></div>
+
+  <div class="powerBolt"></div>
+  <div class="powerBolt b2"></div>
+  <div class="powerBolt b3"></div>
+  <div class="powerBolt b4"></div>
+
+  <div class="powerContent">
+
+    <div class="powerIcon">
+      ⚡
+    </div>
+
+    <div class="powerText">
+      POWER MODE
+    </div>
+
+    <div class="powerSub">
+      CURSED ENERGY MAXIMUM
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- INFINITY -->
+<!-- ================================================= -->
+
+<div id="infinityScreen">
+
+  <div class="infinityRing"></div>
+  <div class="infinityRing r2"></div>
+  <div class="infinityRing r3"></div>
+  <div class="infinityRing r4"></div>
+
+  <div class="infinitySymbol">
+    ∞
+  </div>
+
+  <div class="infinityContent">
+
+    <div class="infinityText">
+      INFINITY MODE
+    </div>
+
+    <div class="infinitySub">
+      NOTHING CAN REACH GOJO
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- RED BLUE -->
+<!-- ================================================= -->
+
+<div id="redBlueScreen">
+
+  <div class="redOrb"></div>
+
+  <div class="blueOrb"></div>
+
+  <div class="redBlueCore"></div>
+
+  <div class="redBlueContent">
+
+    <div class="redBlueIcon">
+      🔴🔵
+    </div>
+
+    <div class="redBlueText">
+      RED + BLUE
+    </div>
+
+    <div class="redBlueSub">
+      CURSED TECHNIQUE COMBINATION
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- WARNING SOUND -->
+<!-- ================================================= -->
+
+<audio
+  id="warningSound"
+  preload="auto">
+
+  <source
+    src="https://raw.githubusercontent.com/armraryan4-source/nextgen-tution-centre/main/tithuh-warning-545568.mp3"
+    type="audio/mpeg">
+
+</audio>
+
+
+<!-- ================================================= -->
+<!-- MODE BUTTONS -->
+<!-- ================================================= -->
+
+<button
+  id="testDomainBtn"
+  class="modeBtn"
+  onclick="toggleDomain()">
+
+  ⚡ DOMAIN MODE
+
+</button>
+
+
+<button
+  id="hollowPurpleBtn"
+  class="modeBtn"
+  onclick="toggleHollowPurple()">
+
+  🟣 HOLLOW PURPLE
+
+</button>
+
+
+<button
+  id="powerBtn"
+  class="modeBtn"
+  onclick="togglePower()">
+
+  ⚡ POWER MODE
+
+</button>
+
+
+<button
+  id="infinityBtn"
+  class="modeBtn"
+  onclick="toggleInfinity()">
+
+  ♾️ INFINITY MODE
+
+</button>
+
+
+<button
+  id="redBlueBtn"
+  class="modeBtn"
+  onclick="toggleRedBlue()">
+
+  🔴🔵 RED + BLUE
+
+</button>
+
+
+<script>
+
+
+/* ================================================= */
+/* ELEMENTS */
+/* ================================================= */
+
+const normalVideo =
+  document.getElementById("bgVideo1");
+
+const secondVideo =
+  document.getElementById("bgVideo2");
+
+const warningScreen =
+  document.getElementById("warningScreen");
+
+const calmScreen =
+  document.getElementById("calmScreen");
+
+const hollowPurpleScreen =
+  document.getElementById("hollowPurpleScreen");
+
+const powerScreen =
+  document.getElementById("powerScreen");
+
+const infinityScreen =
+  document.getElementById("infinityScreen");
+
+const redBlueScreen =
+  document.getElementById("redBlueScreen");
+
+const warningSound =
+  document.getElementById("warningSound");
+
+const reactionEmoji =
+  document.getElementById("reactionEmoji");
+
+const status =
+  document.getElementById("status");
+
+const domainBtn =
+  document.getElementById("testDomainBtn");
+
+const hollowBtn =
+  document.getElementById("hollowPurpleBtn");
+
+const powerBtn =
+  document.getElementById("powerBtn");
+
+const infinityBtn =
+  document.getElementById("infinityBtn");
+
+const redBlueBtn =
+  document.getElementById("redBlueBtn");
+
+const questionInput =
+  document.getElementById("question");
+
+const answerBox =
+  document.getElementById("answer");
+
+const sendBtn =
+  document.getElementById("sendBtn");
+
+const memoryStatus =
+  document.getElementById("memoryStatus");
+
+
+/* ================================================= */
+/* MODE VARIABLES */
+/* ================================================= */
+
+let domainMode=false;
+
+let hollowPurpleMode=false;
+
+let powerMode=false;
+
+let infinityMode=false;
+
+let redBlueMode=false;
+
+let modeBusy=false;
+
+
+/* ================================================= */
+/* CHAT MEMORY */
+/* ================================================= */
+
+const MEMORY_KEY =
+  "GOJO_AI_CHAT_MEMORY_V1";
+
+
+let chatMemory=[];
+
+
+/* ================================================= */
+/* LOAD MEMORY */
+/* ================================================= */
+
+function loadMemory(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(
+        MEMORY_KEY
+      );
+
+    if(saved){
+
+      const parsed =
+        JSON.parse(saved);
+
+      if(Array.isArray(parsed)){
+
+        chatMemory =
+          parsed.slice(-20);
+
+      }
+
+    }
+
+  }
+
+  catch(error){
+
+    chatMemory=[];
+
+  }
+
+
+  updateMemoryStatus();
+
+}
+
+
+/* ================================================= */
+/* SAVE MEMORY */
+/* ================================================= */
+
+function saveMemory(){
+
+  try{
+
+    localStorage.setItem(
+      MEMORY_KEY,
+      JSON.stringify(
+        chatMemory.slice(-20)
+      )
+    );
+
+  }
+
+  catch(error){
+
+    console.log(
+      "Memory save error",
+      error
+    );
+
+  }
+
+  updateMemoryStatus();
+
+}
+
+
+/* ================================================= */
+/* MEMORY STATUS */
+/* ================================================= */
+
+function updateMemoryStatus(){
+
+  const count =
+    chatMemory.length;
+
+  if(count===0){
+
+    memoryStatus.innerText =
+      "🧠 Memory ready";
+
+    return;
+
+  }
+
+
+  memoryStatus.innerText =
+    "🧠 " +
+    Math.floor(count/2) +
+    " conversation(s) remembered";
+
+}
+
+
+/* ================================================= */
+/* CLEAR MEMORY */
+/* ================================================= */
+
+function clearMemory(){
+
+  chatMemory=[];
+
+  try{
+
+    localStorage.removeItem(
+      MEMORY_KEY
+    );
+
+  }
+
+  catch(error){}
+
+
+  answerBox.innerText =
+    "🧠 GOJO memory cleared.\n\nAb fresh conversation start kar sakte ho.";
+
+  status.innerText =
+    "🟢 GOJO ONLINE";
+
+  setReaction("thinking");
+
+  updateMemoryStatus();
+
+}
+
+
+/* ================================================= */
+/* VIDEOS */
+/* ================================================= */
+
+normalVideo.muted=true;
+
+normalVideo.volume=0;
+
+secondVideo.muted=false;
+
+secondVideo.volume=1;
+
+normalVideo.play().catch(()=>{});
+
+
+/* ================================================= */
+/* STARS */
+/* ================================================= */
+
+const stars =
+  document.getElementById("stars");
+
+
+for(let i=0;i<45;i++){
+
+  const star =
+    document.createElement("div");
+
+  star.className="star";
+
+  star.style.left =
+    Math.random()*100+"%";
+
+  star.style.top =
+    Math.random()*100+"%";
+
+  const size =
+    Math.random()*3+1;
+
+  star.style.width =
+    size+"px";
+
+  star.style.height =
+    size+"px";
+
+  star.style.animationDuration =
+    (Math.random()*12+7)+"s";
+
+  star.style.animationDelay =
+    -(Math.random()*10)+"s";
+
+  stars.appendChild(star);
+
+}
+
+
+/* ================================================= */
+/* CHAT TOGGLE */
+/* ================================================= */
+
+function toggleChat(){
+
+  const panel =
+    document.getElementById(
+      "chatPanel"
+    );
+
+  const button =
+    document.getElementById(
+      "hideBtn"
+    );
+
+  panel.classList.toggle(
+    "hidden"
+  );
+
+  button.innerText =
+    panel.classList.contains("hidden")
+      ? "▲"
+      : "▼";
+
+}
+
+
+/* ================================================= */
+/* ENTER KEY */
+/* ================================================= */
+
+questionInput.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key==="Enter" &&
+      !event.shiftKey
+    ){
+
+      event.preventDefault();
+
+      sendQuestion();
+
+    }
+
+  }
+);
+
+
+/* ================================================= */
+/* REACTION DETECTION */
+/* ================================================= */
+
+function detectReaction(text){
+
+  const q =
+    text
+      .toLowerCase()
+      .trim();
+
+
+  if(
+    q==="hello" ||
+    q==="hi" ||
+    q==="hey" ||
+    q==="konnichiwa" ||
+    q.includes("hello gojo") ||
+    q.includes("hi gojo")
+  ){
+
+    return "greeting";
+
+  }
+
+
+  if(
+    q.includes("joke") ||
+    q.includes("funny") ||
+    q.includes("make me laugh") ||
+    q.includes("hasao") ||
+    q.includes("हंसाओ")
+  ){
+
+    return "funny";
+
+  }
+
+
+  if(
+    q.includes("wow") ||
+    q.includes("amazing") ||
+    q.includes("really") ||
+    q.includes("seriously") ||
+    q.includes("surprise")
+  ){
+
+    return "surprised";
+
+  }
+
+
+  if(
+    q.includes("thank you") ||
+    q.includes("thanks") ||
+    q.includes("great answer")
+  ){
+
+    return "happy";
+
+  }
+
+
+  if(
+    q.includes("danger") ||
+    q.includes("warning") ||
+    q.includes("emergency") ||
+    q.includes("alert")
+  ){
+
+    return "alert";
+
+  }
+
+
+  if(
+    q.includes("power") ||
+    q.includes("strong") ||
+    q.includes("strongest") ||
+    q.includes("gojo") ||
+    q.includes("domain")
+  ){
+
+    return "power";
+
+  }
+
+
+  if(
+    q.includes("math") ||
+    q.includes("calculate") ||
+    q.includes("physics") ||
+    q.includes("chemistry") ||
+    q.includes("biology") ||
+    q.includes("science") ||
+    q.includes("explain") ||
+    q.includes("how") ||
+    q.includes("why") ||
+    q.includes("what")
+  ){
+
+    return "thinking";
+
+  }
+
+
+  if(
+    q==="bye" ||
+    q==="goodbye"
+  ){
+
+    return "bye";
+
+  }
+
+
+  return "thinking";
+
+}
+
+
+/* ================================================= */
+/* SET REACTION */
+/* ================================================= */
+
+function setReaction(type){
+
+  const profile =
+    document.getElementById(
+      "gojoProfile"
+    );
+
+
+  profile.classList.remove(
+    "thinkingReaction",
+    "happyReaction",
+    "powerReaction",
+    "funnyReaction",
+    "surprisedReaction",
+    "alertReaction"
+  );
+
+
+  let emoji="🧠";
+
+
+  switch(type){
+
+    case "greeting":
+
+      emoji="👋";
+
+      profile.classList.add(
+        "happyReaction"
+      );
+
+      break;
+
+
+    case "funny":
+
+      emoji="😂";
+
+      profile.classList.add(
+        "funnyReaction"
+      );
+
+      break;
+
+
+    case "surprised":
+
+      emoji="😮";
+
+      profile.classList.add(
+        "surprisedReaction"
+      );
+
+      break;
+
+
+    case "happy":
+
+      emoji="❤️";
+
+      profile.classList.add(
+        "happyReaction"
+      );
+
+      break;
+
+
+    case "alert":
+
+      emoji="⚠️";
+
+      profile.classList.add(
+        "alertReaction"
+      );
+
+      break;
+
+
+    case "power":
+
+      emoji="⚡";
+
+      profile.classList.add(
+        "powerReaction"
+      );
+
+      break;
+
+
+    case "thinking":
+
+      emoji="🧠";
+
+      profile.classList.add(
+        "thinkingReaction"
+      );
+
+      break;
+
+  }
+
+
+  reactionEmoji.innerText =
+    emoji;
+
+  reactionEmoji.classList.remove(
+    "show"
+  );
+
+  void reactionEmoji.offsetWidth;
+
+  reactionEmoji.classList.add(
+    "show"
+  );
+
+}
+
+
+/* ================================================= */
+/* SEND QUESTION + MEMORY */
+/* ================================================= */
+
+function sendQuestion(){
+
+  const question =
+    questionInput.value.trim();
+
+
+  if(!question){
+
+    return;
+
+  }
+
+
+  setReaction(
+    detectReaction(question)
+  );
+
+
+  status.innerText =
+    "🟡 GOJO THINKING...";
+
+
+  answerBox.innerText =
+    "GOJO is thinking...";
+
+
+  sendBtn.disabled=true;
+
+
+  // Add user message to memory
+  chatMemory.push({
+
+    role:"user",
+
+    text:question
+
+  });
+
+
+  saveMemory();
+
+
+  // Copy current memory for backend
+  const history =
+    chatMemory.slice(-12);
+
+
+  if(
+    typeof google==="undefined" ||
+    !google.script ||
+    !google.script.run
+  ){
+
+    answerBox.innerText =
+      "GOJO: Apps Script connection not available.";
+
+    sendBtn.disabled=false;
+
+    return;
+
+  }
+
+
+  google.script.run
+
+    .withSuccessHandler(
+      function(response){
+
+        sendBtn.disabled=false;
+
+
+        status.innerText =
+          "🟢 GOJO ONLINE";
+
+
+        answerBox.innerText =
+          response;
+
+
+        // Save GOJO answer
+        chatMemory.push({
+
+          role:"assistant",
+
+          text:String(response)
+
+        });
+
+
+        saveMemory();
+
+
+        speak(response);
+
+
+        questionInput.value="";
+
+
+        setTimeout(
+          function(){
+
+            setReaction(
+              "thinking"
+            );
+
+          },
+          3500
+        );
+
+      }
+    )
+
+
+    .withFailureHandler(
+      function(error){
+
+        sendBtn.disabled=false;
+
+
+        status.innerText =
+          "🟢 GOJO LOCAL MODE";
+
+
+        const errorText =
+          "GOJO: " +
+          (
+            error.message ||
+            "AI connection unavailable."
+          );
+
+
+        answerBox.innerText =
+          errorText;
+
+
+        // Remove unanswered user
+        // message if request failed
+        chatMemory.pop();
+
+        saveMemory();
+
+      }
+    )
+
+
+    .askGOJO(
+      question,
+      history
+    );
+
+}
+
+
+/* ================================================= */
+/* WARNING */
+/* ================================================= */
+
+function playWarningAnimation(callback){
+
+  warningScreen.classList.remove(
+    "show"
+  );
+
+  void warningScreen.offsetWidth;
+
+  warningScreen.classList.add(
+    "show"
+  );
+
+
+  warningSound.pause();
+
+  warningSound.currentTime=0;
+
+  warningSound.volume=1;
+
+
+  const p =
+    warningSound.play();
+
+
+  if(p){
+
+    p.catch(()=>{});
+
+  }
+
+
+  setTimeout(
+    function(){
+
+      warningScreen.classList.remove(
+        "show"
+      );
+
+      warningSound.pause();
+
+      warningSound.currentTime=0;
+
+
+      if(
+        typeof callback==="function"
+      ){
+
+        callback();
+
+      }
+
+    },
+    5000
+  );
+
+}
+
+
+/* ================================================= */
+/* CALM */
+/* ================================================= */
+
+function playCalmAnimation(callback){
+
+  calmScreen.classList.remove(
+    "show"
+  );
+
+  void calmScreen.offsetWidth;
+
+  calmScreen.classList.add(
+    "show"
+  );
+
+
+  setTimeout(
+    function(){
+
+      calmScreen.classList.remove(
+        "show"
+      );
+
+
+      if(
+        typeof callback==="function"
+      ){
+
+        callback();
+
+      }
+
+    },
+    3500
+  );
+
+}
+
+
+/* ================================================= */
+/* VIDEO SWITCH */
+/* ================================================= */
+
+function switchToSecondVideo(){
+
+  normalVideo.pause();
+
+  normalVideo.muted=true;
+
+  normalVideo.volume=0;
+
+  secondVideo.currentTime=0;
+
+  secondVideo.muted=false;
+
+  secondVideo.volume=1;
+
+  normalVideo.style.opacity="0";
+
+  secondVideo.style.opacity="1";
+
+
+  const p =
+    secondVideo.play();
+
+
+  if(p){
+
+    p.catch(
+      function(){
+
+        secondVideo.muted=true;
+
+        secondVideo.play().catch(()=>{});
+
+      }
+    );
+
+  }
+
+}
+
+
+function switchToNormalVideo(){
+
+  secondVideo.pause();
+
+  secondVideo.muted=true;
+
+  secondVideo.volume=0;
+
+  normalVideo.muted=true;
+
+  normalVideo.volume=0;
+
+  normalVideo.currentTime=0;
+
+  secondVideo.style.opacity="0";
+
+  normalVideo.style.opacity="1";
+
+  normalVideo.play().catch(()=>{});
+
+}
+
+
+/* ================================================= */
+/* DOMAIN MODE */
+/* ================================================= */
+
+function toggleDomain(){
+
+  if(modeBusy)return;
+
+
+  if(
+    hollowPurpleMode ||
+    powerMode ||
+    infinityMode ||
+    redBlueMode
+  ){
+
+    return;
+
+  }
+
+
+  modeBusy=true;
+
+
+  if(!domainMode){
+
+    playWarningAnimation(
+      function(){
+
+        switchToSecondVideo();
+
+        domainMode=true;
+
+        domainBtn.innerText =
+          "😌 NORMAL MODE";
+
+        status.innerText =
+          "⚡ DOMAIN MODE ACTIVE";
+
+        modeBusy=false;
+
+      }
+    );
+
+  }
+
+  else{
+
+    playCalmAnimation(
+      function(){
+
+        switchToNormalVideo();
+
+        domainMode=false;
+
+        domainBtn.innerText =
+          "⚡ DOMAIN MODE";
+
+        status.innerText =
+          "🟢 GOJO ONLINE";
+
+        modeBusy=false;
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* HOLLOW PURPLE */
+/* ================================================= */
+
+function toggleHollowPurple(){
+
+  if(modeBusy)return;
+
+
+  if(
+    domainMode ||
+    powerMode ||
+    infinityMode ||
+    redBlueMode
+  ){
+
+    return;
+
+  }
+
+
+  modeBusy=true;
+
+
+  if(!hollowPurpleMode){
+
+    hollowPurpleScreen.classList.remove(
+      "show"
+    );
+
+    void hollowPurpleScreen.offsetWidth;
+
+    hollowPurpleScreen.classList.add(
+      "show"
+    );
+
+
+    setReaction("power");
+
+    reactionEmoji.innerText="🟣";
+
+    hollowBtn.classList.add(
+      "active"
+    );
+
+
+    status.innerText =
+      "🟣 HOLLOW PURPLE ACTIVE";
+
+
+    setTimeout(
+      function(){
+
+        hollowPurpleMode=true;
+
+        hollowBtn.innerText =
+          "😌 NORMAL MODE";
+
+        modeBusy=false;
+
+      },
+      2800
+    );
+
+  }
+
+  else{
+
+    playCalmAnimation(
+      function(){
+
+        hollowPurpleScreen.classList.remove(
+          "show"
+        );
+
+        hollowPurpleMode=false;
+
+        hollowBtn.classList.remove(
+          "active"
+        );
+
+        hollowBtn.innerText =
+          "🟣 HOLLOW PURPLE";
+
+        status.innerText =
+          "🟢 GOJO ONLINE";
+
+        setReaction(
+          "thinking"
+        );
+
+        modeBusy=false;
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* POWER */
+/* ================================================= */
+
+function togglePower(){
+
+  if(modeBusy)return;
+
+
+  if(
+    domainMode ||
+    hollowPurpleMode ||
+    infinityMode ||
+    redBlueMode
+  ){
+
+    return;
+
+  }
+
+
+  modeBusy=true;
+
+
+  if(!powerMode){
+
+    powerScreen.classList.remove(
+      "show"
+    );
+
+    void powerScreen.offsetWidth;
+
+    powerScreen.classList.add(
+      "show"
+    );
+
+
+    setReaction("power");
+
+    reactionEmoji.innerText="⚡";
+
+    powerBtn.classList.add(
+      "active"
+    );
+
+
+    status.innerText =
+      "⚡ POWER MODE ACTIVE";
+
+
+    setTimeout(
+      function(){
+
+        powerMode=true;
+
+        powerBtn.innerText =
+          "😌 NORMAL MODE";
+
+        modeBusy=false;
+
+      },
+      3000
+    );
+
+  }
+
+  else{
+
+    playCalmAnimation(
+      function(){
+
+        powerScreen.classList.remove(
+          "show"
+        );
+
+        powerMode=false;
+
+        powerBtn.classList.remove(
+          "active"
+        );
+
+        powerBtn.innerText =
+          "⚡ POWER MODE";
+
+        status.innerText =
+          "🟢 GOJO ONLINE";
+
+        setReaction(
+          "thinking"
+        );
+
+        modeBusy=false;
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* INFINITY */
+/* ================================================= */
+
+function toggleInfinity(){
+
+  if(modeBusy)return;
+
+
+  if(
+    domainMode ||
+    hollowPurpleMode ||
+    powerMode ||
+    redBlueMode
+  ){
+
+    return;
+
+  }
+
+
+  modeBusy=true;
+
+
+  if(!infinityMode){
+
+    infinityScreen.classList.remove(
+      "show"
+    );
+
+    void infinityScreen.offsetWidth;
+
+    infinityScreen.classList.add(
+      "show"
+    );
+
+
+    setReaction("power");
+
+    reactionEmoji.innerText="♾️";
+
+    infinityBtn.classList.add(
+      "active"
+    );
+
+
+    status.innerText =
+      "♾️ INFINITY ACTIVE";
+
+
+    setTimeout(
+      function(){
+
+        infinityMode=true;
+
+        infinityBtn.innerText =
+          "😌 NORMAL MODE";
+
+        modeBusy=false;
+
+      },
+      3500
+    );
+
+  }
+
+  else{
+
+    playCalmAnimation(
+      function(){
+
+        infinityScreen.classList.remove(
+          "show"
+        );
+
+        infinityMode=false;
+
+        infinityBtn.classList.remove(
+          "active"
+        );
+
+        infinityBtn.innerText =
+          "♾️ INFINITY MODE";
+
+        status.innerText =
+          "🟢 GOJO ONLINE";
+
+        setReaction(
+          "thinking"
+        );
+
+        modeBusy=false;
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* RED + BLUE */
+/* ================================================= */
+
+function toggleRedBlue(){
+
+  if(modeBusy)return;
+
+
+  if(
+    domainMode ||
+    hollowPurpleMode ||
+    powerMode ||
+    infinityMode
+  ){
+
+    return;
+
+  }
+
+
+  modeBusy=true;
+
+
+  if(!redBlueMode){
+
+    redBlueScreen.classList.remove(
+      "show"
+    );
+
+    void redBlueScreen.offsetWidth;
+
+    redBlueScreen.classList.add(
+      "show"
+    );
+
+
+    setReaction("power");
+
+    reactionEmoji.innerText =
+      "🔴🔵";
+
+    redBlueBtn.classList.add(
+      "active"
+    );
+
+
+    status.innerText =
+      "🔴🔵 RED + BLUE ACTIVE";
+
+
+    setTimeout(
+      function(){
+
+        redBlueMode=true;
+
+        redBlueBtn.innerText =
+          "😌 NORMAL MODE";
+
+        modeBusy=false;
+
+      },
+      3500
+    );
+
+  }
+
+  else{
+
+    playCalmAnimation(
+      function(){
+
+        redBlueScreen.classList.remove(
+          "show"
+        );
+
+        redBlueMode=false;
+
+        redBlueBtn.classList.remove(
+          "active"
+        );
+
+        redBlueBtn.innerText =
+          "🔴🔵 RED + BLUE";
+
+        status.innerText =
+          "🟢 GOJO ONLINE";
+
+        setReaction(
+          "thinking"
+        );
+
+        modeBusy=false;
+
+      }
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* VOICE */
+/* ================================================= */
+
+function speak(text){
+
+  if(
+    !("speechSynthesis" in window)
+  ){
+
+    return;
+
+  }
+
+
+  window.speechSynthesis.cancel();
+
+
+  const utterance =
+    new SpeechSynthesisUtterance(
+      text
+    );
+
+
+  utterance.lang="en-IN";
+
+  utterance.rate=.95;
+
+  utterance.pitch=.9;
+
+  utterance.volume=1;
+
+
+  window.speechSynthesis.speak(
+    utterance
+  );
+
+}
+
+
+/* ================================================= */
+/* MICROPHONE */
+/* ================================================= */
+
+let recognition=null;
+
+
+function startMic(){
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+
+  if(!SpeechRecognition){
+
+    alert(
+      "Voice recognition is not supported in this browser."
+    );
+
+    return;
+
+  }
+
+
+  const mic =
+    document.getElementById(
+      "micBtn"
+    );
+
+
+  recognition =
+    new SpeechRecognition();
+
+
+  recognition.lang="en-IN";
+
+  recognition.interimResults=true;
+
+  recognition.continuous=false;
+
+
+  mic.classList.add(
+    "listening"
+  );
+
+
+  recognition.start();
+
+
+  recognition.onresult =
+    function(event){
+
+      let transcript="";
+
+
+      for(
+        let i=event.resultIndex;
+        i<event.results.length;
+        i++
+      ){
+
+        transcript +=
+          event.results[i][0].transcript;
+
+      }
+
+
+      questionInput.value =
+        transcript;
+
+    };
+
+
+  recognition.onend =
+    function(){
+
+      mic.classList.remove(
+        "listening"
+      );
+
+
+      if(
+        questionInput.value.trim()
+      ){
+
+        sendQuestion();
+
+      }
+
+    };
+
+
+  recognition.onerror =
+    function(){
+
+      mic.classList.remove(
+        "listening"
+      );
+
+    };
+
+}
+
+
+/* ================================================= */
+/* START MEMORY */
+/* ================================================= */
+
+loadMemory();
+
+setReaction("thinking");
+/* ================================================= */
+/* NOTES SYSTEM */
+/* ================================================= */
+
+const NOTES_KEY =
+  "GOJO_AI_NOTES_V1";
+
+
+let notes = [];
+
+let currentNoteId = null;
+
+let noteAutoSaveTimer = null;
+
+
+/* ================================================= */
+/* NOTES ELEMENTS */
+/* ================================================= */
+
+const notesPanel =
+  document.getElementById("notesPanel");
+
+const notesList =
+  document.getElementById("notesList");
+
+const noteSearch =
+  document.getElementById("noteSearch");
+
+const noteTitle =
+  document.getElementById("noteTitle");
+
+const noteContent =
+  document.getElementById("noteContent");
+
+const noteUpdated =
+  document.getElementById("noteUpdated");
+
+const pinNoteBtn =
+  document.getElementById("pinNoteBtn");
+
+
+/* ================================================= */
+/* LOAD NOTES */
+/* ================================================= */
+
+function loadNotes(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(
+        NOTES_KEY
+      );
+
+    if(saved){
+
+      const parsed =
+        JSON.parse(saved);
+
+      if(Array.isArray(parsed)){
+
+        notes=parsed;
+
+      }
+
+    }
+
+  }
+
+  catch(error){
+
+    console.log(
+      "Notes load error:",
+      error
+    );
+
+    notes=[];
+
+  }
+
+  sortNotes();
+
+  renderNotes();
+
+}
+
+
+/* ================================================= */
+/* SAVE ALL NOTES */
+/* ================================================= */
+
+function saveNotes(){
+
+  try{
+
+    localStorage.setItem(
+      NOTES_KEY,
+      JSON.stringify(notes)
+    );
+
+  }
+
+  catch(error){
+
+    console.log(
+      "Notes save error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* SORT NOTES */
+/* ================================================= */
+
+function sortNotes(){
+
+  notes.sort(
+    function(a,b){
+
+      if(
+        a.pinned &&
+        !b.pinned
+      ){
+
+        return -1;
+
+      }
+
+      if(
+        !a.pinned &&
+        b.pinned
+      ){
+
+        return 1;
+
+      }
+
+      return (
+        new Date(b.updatedAt) -
+        new Date(a.updatedAt)
+      );
+
+    }
+  );
+
+}
+
+
+/* ================================================= */
+/* OPEN NOTES */
+/* ================================================= */
+
+function openNotes(){
+
+  notesPanel.classList.add(
+    "show"
+  );
+
+  renderNotes();
+
+  if(
+    currentNoteId === null &&
+    notes.length > 0
+  ){
+
+    selectNote(
+      notes[0].id
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* CLOSE NOTES */
+/* ================================================= */
+
+function closeNotes(){
+
+  notesPanel.classList.remove(
+    "show"
+  );
+
+}
+
+
+/* ================================================= */
+/* CREATE NEW NOTE */
+/* ================================================= */
+
+function openNewNote(){
+
+  const now =
+    new Date().toISOString();
+
+
+  const newNote={
+
+    id:
+      Date.now().toString(),
+
+    title:
+      "New Note",
+
+    content:
+      "",
+
+    pinned:
+      false,
+
+    createdAt:
+      now,
+
+    updatedAt:
+      now
+
+  };
+
+
+  notes.unshift(
+    newNote
+  );
+
+
+  currentNoteId =
+    newNote.id;
+
+
+  saveNotes();
+
+  renderNotes();
+
+  loadNoteIntoEditor(
+    newNote
+  );
+
+
+  setTimeout(
+    function(){
+
+      noteTitle.focus();
+
+      noteTitle.select();
+
+    },
+    100
+  );
+
+}
+
+
+/* ================================================= */
+/* SELECT NOTE */
+/* ================================================= */
+
+function selectNote(id){
+
+  const note =
+    notes.find(
+      function(n){
+
+        return n.id===id;
+
+      }
+    );
+
+
+  if(!note){
+
+    return;
+
+  }
+
+
+  currentNoteId=id;
+
+  loadNoteIntoEditor(
+    note
+  );
+
+  renderNotes();
+
+}
+
+
+/* ================================================= */
+/* LOAD NOTE INTO EDITOR */
+/* ================================================= */
+
+function loadNoteIntoEditor(note){
+
+  noteTitle.value =
+    note.title || "";
+
+  noteContent.value =
+    note.content || "";
+
+
+  updatePinButton(
+    note.pinned
+  );
+
+
+  noteUpdated.innerText =
+    "Updated " +
+    formatNoteDate(
+      note.updatedAt
+    );
+
+}
+
+
+/* ================================================= */
+/* RENDER NOTES */
+/* ================================================= */
+
+function renderNotes(){
+
+  if(!notesList){
+
+    return;
+
+  }
+
+
+  const search =
+    noteSearch.value
+      .toLowerCase()
+      .trim();
+
+
+  let filtered =
+    notes.filter(
+      function(note){
+
+        return (
+          !search ||
+          String(note.title || "")
+            .toLowerCase()
+            .includes(search) ||
+          String(note.content || "")
+            .toLowerCase()
+            .includes(search)
+        );
+
+      }
+    );
+
+
+  if(filtered.length===0){
+
+    notesList.innerHTML =
+      `
+      <div class="notesEmpty">
+        📝<br><br>
+        ${
+          search
+            ? "No matching notes found."
+            : "No notes yet.<br>Create your first note."
+        }
+      </div>
+      `;
+
+    return;
+
+  }
+
+
+  notesList.innerHTML="";
+
+
+  filtered.forEach(
+    function(note){
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+      item.className =
+        "noteItem";
+
+
+      if(
+        note.id ===
+        currentNoteId
+      ){
+
+        item.classList.add(
+          "active"
+        );
+
+      }
+
+
+      const title =
+        document.createElement(
+          "div"
+        );
+
+      title.className =
+        "noteItemTitle";
+
+
+      title.innerText =
+        (
+          note.pinned
+            ? "📌 "
+            : ""
+        ) +
+        (
+          note.title ||
+          "Untitled Note"
+        );
+
+
+      const preview =
+        document.createElement(
+          "div"
+        );
+
+      preview.className =
+        "noteItemPreview";
+
+
+      preview.innerText =
+        note.content
+          ? note.content
+              .replace(/\s+/g," ")
+              .slice(0,80)
+          : "Empty note";
+
+
+      const date =
+        document.createElement(
+          "div"
+        );
+
+      date.className =
+        "noteItemDate";
+
+
+      date.innerText =
+        formatNoteDate(
+          note.updatedAt
+        );
+
+
+      item.appendChild(
+        title
+      );
+
+      item.appendChild(
+        preview
+      );
+
+      item.appendChild(
+        date
+      );
+
+
+      item.onclick =
+        function(){
+
+          selectNote(
+            note.id
+          );
+
+        };
+
+
+      notesList.appendChild(
+        item
+      );
+
+    }
+  );
+
+}
+
+
+/* ================================================= */
+/* SAVE CURRENT NOTE */
+/* ================================================= */
+
+function saveCurrentNote(){
+
+  if(
+    currentNoteId===null
+  ){
+
+    openNewNote();
+
+    return;
+
+  }
+
+
+  const note =
+    notes.find(
+      function(n){
+
+        return n.id===
+          currentNoteId;
+
+      }
+    );
+
+
+  if(!note){
+
+    return;
+
+  }
+
+
+  note.title =
+    noteTitle.value.trim() ||
+    "Untitled Note";
+
+
+  note.content =
+    noteContent.value;
+
+
+  note.updatedAt =
+    new Date().toISOString();
+
+
+  saveNotes();
+
+  sortNotes();
+
+  renderNotes();
+
+
+  noteUpdated.innerText =
+    "Saved just now";
+
+
+  setTimeout(
+    function(){
+
+      if(currentNoteId===note.id){
+
+        noteUpdated.innerText =
+          "Updated " +
+          formatNoteDate(
+            note.updatedAt
+          );
+
+      }
+
+    },
+    1500
+  );
+
+}
+
+
+/* ================================================= */
+/* AUTO SAVE */
+/* ================================================= */
+
+function autoSaveNote(){
+
+  clearTimeout(
+    noteAutoSaveTimer
+  );
+
+
+  noteAutoSaveTimer =
+    setTimeout(
+      function(){
+
+        if(
+          currentNoteId !== null
+        ){
+
+          saveCurrentNote();
+
+        }
+
+      },
+      500
+    );
+
+}
+
+
+/* ================================================= */
+/* TITLE CHANGE */
+/* ================================================= */
+
+noteTitle.addEventListener(
+  "input",
+  function(){
+
+    autoSaveNote();
+
+  }
+);
+
+
+/* ================================================= */
+/* CONTENT CHANGE */
+/* ================================================= */
+
+noteContent.addEventListener(
+  "input",
+  function(){
+
+    autoSaveNote();
+
+  }
+);
+
+
+/* ================================================= */
+/* SEARCH */
+/* ================================================= */
+
+noteSearch.addEventListener(
+  "input",
+  function(){
+
+    renderNotes();
+
+  }
+);
+
+
+/* ================================================= */
+/* PIN NOTE */
+/* ================================================= */
+
+function togglePinNote(){
+
+  if(
+    currentNoteId===null
+  ){
+
+    return;
+
+  }
+
+
+  const note =
+    notes.find(
+      function(n){
+
+        return n.id===
+          currentNoteId;
+
+      }
+    );
+
+
+  if(!note){
+
+    return;
+
+  }
+
+
+  note.pinned =
+    !note.pinned;
+
+
+  note.updatedAt =
+    new Date().toISOString();
+
+
+  updatePinButton(
+    note.pinned
+  );
+
+
+  saveNotes();
+
+  sortNotes();
+
+  renderNotes();
+
+}
+
+
+/* ================================================= */
+/* PIN BUTTON UI */
+/* ================================================= */
+
+function updatePinButton(pinned){
+
+  if(pinned){
+
+    pinNoteBtn.innerText =
+      "📌 Pinned";
+
+    pinNoteBtn.classList.add(
+      "pinned"
+    );
+
+  }
+
+  else{
+
+    pinNoteBtn.innerText =
+      "📌 Pin";
+
+    pinNoteBtn.classList.remove(
+      "pinned"
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* DELETE NOTE */
+/* ================================================= */
+
+function deleteCurrentNote(){
+
+  if(
+    currentNoteId===null
+  ){
+
+    return;
+
+  }
+
+
+  const note =
+    notes.find(
+      function(n){
+
+        return n.id===
+          currentNoteId;
+
+      }
+    );
+
+
+  if(!note){
+
+    return;
+
+  }
+
+
+  const confirmed =
+    confirm(
+      "Delete this note?"
+    );
+
+
+  if(!confirmed){
+
+    return;
+
+  }
+
+
+  notes =
+    notes.filter(
+      function(n){
+
+        return n.id !==
+          currentNoteId;
+
+      }
+    );
+
+
+  currentNoteId=null;
+
+  saveNotes();
+
+  renderNotes();
+
+
+  if(notes.length>0){
+
+    sortNotes();
+
+    selectNote(
+      notes[0].id
+    );
+
+  }
+
+  else{
+
+    noteTitle.value="";
+
+    noteContent.value="";
+
+    noteUpdated.innerText =
+      "No note selected";
+
+    updatePinButton(
+      false
+    );
+
+  }
+
+}
+
+
+/* ================================================= */
+/* DATE FORMAT */
+/* ================================================= */
+
+function formatNoteDate(dateString){
+
+  if(!dateString){
+
+    return "";
+
+  }
+
+
+  const date =
+    new Date(
+      dateString
+    );
+
+
+  if(
+    isNaN(
+      date.getTime()
+    )
+  ){
+
+    return "";
+
+  }
+
+
+  const now =
+    new Date();
+
+
+  const diff =
+    now.getTime() -
+    date.getTime();
+
+
+  const minutes =
+    Math.floor(
+      diff / 60000
+    );
+
+
+  if(minutes < 1){
+
+    return "just now";
+
+  }
+
+
+  if(minutes < 60){
+
+    return (
+      minutes +
+      " min ago"
+    );
+
+  }
+
+
+  const hours =
+    Math.floor(
+      minutes / 60
+    );
+
+
+  if(hours < 24){
+
+    return (
+      hours +
+      " hr ago"
+    );
+
+  }
+
+
+  const days =
+    Math.floor(
+      hours / 24
+    );
+
+
+  if(days < 7){
+
+    return (
+      days +
+      " day" +
+      (
+        days===1
+          ? ""
+          : "s"
+      ) +
+      " ago"
+    );
+
+  }
+
+
+  return date.toLocaleDateString(
+    "en-IN",
+    {
+      day:"2-digit",
+      month:"short",
+      year:"numeric"
+    }
+  );
+
+}
+
+
+/* ================================================= */
+/* NOTES KEYBOARD SHORTCUTS */
+/* ================================================= */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      event.key==="Escape" &&
+      notesPanel.classList.contains(
+        "show"
+      )
+    ){
+
+      closeNotes();
+
+    }
+
+
+    if(
+      (event.ctrlKey ||
+       event.metaKey) &&
+      event.key.toLowerCase()==="s" &&
+      notesPanel.classList.contains(
+        "show"
+      )
+    ){
+
+      event.preventDefault();
+
+      saveCurrentNote();
+
+    }
+
+  }
+);
+
+
+/* ================================================= */
+/* START NOTES */
+/* ================================================= */
+
+loadNotes();
+
+</script>
+
+</body>
+
+</html>

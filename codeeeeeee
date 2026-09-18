@@ -1,0 +1,4820 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>NextGen Tuition Centre</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      background:#05070d;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    button,
+    input,
+    select,
+    textarea{
+      font-family:inherit;
+    }
+
+    button{
+      cursor:pointer;
+    }
+
+
+    /* =====================================================
+       BACKGROUND VIDEO
+    ===================================================== */
+
+    #bgVideo{
+      position:fixed;
+      top:50%;
+      left:50%;
+      width:100vw;
+      height:100vh;
+      object-fit:cover;
+      transform:translate(-50%,-50%);
+      z-index:-5;
+      pointer-events:none;
+      background:#05070d;
+    }
+
+    .video-overlay{
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0,0,0,.72),
+          rgba(0,0,0,.48),
+          rgba(0,0,0,.82)
+        );
+      z-index:-4;
+      pointer-events:none;
+    }
+
+    .ambient-glow{
+      position:fixed;
+      width:500px;
+      height:500px;
+      border-radius:50%;
+      background:
+        radial-gradient(
+          circle,
+          rgba(0,153,255,.18),
+          transparent 70%
+        );
+      top:10%;
+      left:-150px;
+      filter:blur(30px);
+      z-index:-3;
+      pointer-events:none;
+    }
+
+    .ambient-glow2{
+      position:fixed;
+      width:450px;
+      height:450px;
+      border-radius:50%;
+      background:
+        radial-gradient(
+          circle,
+          rgba(120,0,255,.16),
+          transparent 70%
+        );
+      bottom:0;
+      right:-120px;
+      filter:blur(30px);
+      z-index:-3;
+      pointer-events:none;
+    }
+
+
+    /* =====================================================
+       NAVBAR
+    ===================================================== */
+
+    .navbar{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      z-index:1000;
+      padding:15px 6%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:rgba(5,8,18,.72);
+      backdrop-filter:blur(15px);
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+
+    .logo{
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:1px;
+      color:white;
+      text-decoration:none;
+    }
+
+    .logo span{
+      color:#38a8ff;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:8px;
+      list-style:none;
+      align-items:center;
+    }
+
+    .nav-links a{
+      color:white;
+      text-decoration:none;
+      font-size:14px;
+      padding:9px 12px;
+      border-radius:10px;
+      transition:.25s;
+    }
+
+    .nav-links a:hover{
+      background:rgba(0,150,255,.18);
+      color:#55b8ff;
+    }
+
+    .login-nav-btn{
+      background:#168de2 !important;
+      box-shadow:0 5px 20px rgba(0,140,255,.25);
+    }
+
+    .menu-btn{
+      display:none;
+      border:none;
+      background:rgba(255,255,255,.10);
+      color:white;
+      padding:9px 12px;
+      border-radius:10px;
+      font-size:20px;
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:120px 20px 70px;
+    }
+
+    .hero-content{
+      max-width:950px;
+      animation:heroIn 1s ease;
+    }
+
+    @keyframes heroIn{
+      from{
+        opacity:0;
+        transform:translateY(30px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .badge{
+      display:inline-block;
+      padding:8px 15px;
+      border-radius:30px;
+      background:rgba(0,145,255,.16);
+      border:1px solid rgba(70,180,255,.35);
+      color:#8bd2ff;
+      font-size:13px;
+      margin-bottom:20px;
+    }
+
+    .hero h1{
+      font-size:clamp(42px,8vw,88px);
+      line-height:.98;
+      font-weight:900;
+      letter-spacing:-3px;
+      text-shadow:0 0 30px rgba(0,150,255,.25);
+    }
+
+    .hero h1 span{
+      color:#35a9ff;
+      text-shadow:0 0 30px rgba(0,150,255,.45);
+    }
+
+    .hero h2{
+      margin-top:20px;
+      font-size:clamp(20px,3vw,32px);
+      font-weight:600;
+      color:#e5edf5;
+    }
+
+    .hero p{
+      margin:18px auto 0;
+      max-width:700px;
+      color:#c7d0da;
+      line-height:1.7;
+      font-size:16px;
+    }
+
+    .hero-buttons{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:30px;
+    }
+
+
+    /* =====================================================
+       BUTTONS
+    ===================================================== */
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:145px;
+      padding:13px 20px;
+      border-radius:13px;
+      text-decoration:none;
+      font-weight:700;
+      transition:.25s;
+      cursor:pointer;
+      border:1px solid rgba(255,255,255,.15);
+    }
+
+    .btn-primary{
+      background:#168de2;
+      color:white;
+      box-shadow:0 8px 30px rgba(0,140,255,.25);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-3px);
+      background:#27a0f5;
+    }
+
+    .btn-secondary{
+      background:rgba(255,255,255,.08);
+      color:white;
+      backdrop-filter:blur(10px);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-3px);
+      background:rgba(255,255,255,.14);
+    }
+
+
+    /* =====================================================
+       SECTIONS
+    ===================================================== */
+
+    section{
+      padding:90px 6%;
+      position:relative;
+    }
+
+    .section-title{
+      text-align:center;
+      max-width:750px;
+      margin:0 auto 45px;
+    }
+
+    .section-title .small{
+      color:#48b2ff;
+      font-size:13px;
+      font-weight:800;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    .section-title h2{
+      font-size:clamp(30px,5vw,50px);
+      margin-top:8px;
+      font-weight:900;
+    }
+
+    .section-title p{
+      margin-top:12px;
+      color:#b9c5d0;
+      line-height:1.7;
+    }
+
+
+    /* =====================================================
+       CARDS
+    ===================================================== */
+
+    .grid{
+      max-width:1200px;
+      margin:auto;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+    }
+
+    .card{
+      padding:27px;
+      border-radius:22px;
+      background:rgba(8,13,24,.67);
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(15px);
+      box-shadow:0 20px 60px rgba(0,0,0,.20);
+      transition:.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-7px);
+      border-color:rgba(50,170,255,.35);
+      box-shadow:0 20px 60px rgba(0,100,200,.14);
+    }
+
+    .card-icon{
+      width:55px;
+      height:55px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:15px;
+      background:rgba(0,145,255,.15);
+      font-size:25px;
+      margin-bottom:18px;
+    }
+
+    .card h3{
+      font-size:21px;
+      margin-bottom:10px;
+    }
+
+    .card p{
+      color:#b9c5d0;
+      line-height:1.65;
+      font-size:14px;
+    }
+
+
+    /* =====================================================
+       CLASSES
+    ===================================================== */
+
+    .class-card{
+      text-align:center;
+    }
+
+    .class-number{
+      font-size:40px;
+      font-weight:900;
+      color:#40adff;
+      margin-bottom:10px;
+    }
+
+    .class-card h3{
+      margin-bottom:8px;
+    }
+
+    .subject-list{
+      color:#c4ced8;
+      font-size:14px;
+      line-height:1.8;
+    }
+
+
+    /* =====================================================
+       TESTS
+    ===================================================== */
+
+    .test-box{
+      max-width:1000px;
+      margin:auto;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:20px;
+    }
+
+    .test-card{
+      padding:30px;
+      border-radius:22px;
+      background:rgba(8,13,24,.70);
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(15px);
+    }
+
+    .test-card h3{
+      font-size:24px;
+      margin-bottom:10px;
+    }
+
+    .test-card p{
+      color:#bdc7d1;
+      line-height:1.7;
+      margin-bottom:20px;
+    }
+
+
+    /* =====================================================
+       RESULTS
+    ===================================================== */
+
+    .result-table-wrap{
+      max-width:1000px;
+      margin:auto;
+      overflow-x:auto;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(5,9,18,.65);
+      backdrop-filter:blur(15px);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:650px;
+    }
+
+    th,
+    td{
+      padding:16px;
+      text-align:left;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    th{
+      color:#65bcff;
+      background:rgba(0,130,220,.10);
+    }
+
+    td{
+      color:#d7dfe7;
+    }
+
+
+    /* =====================================================
+       ACHIEVEMENTS
+    ===================================================== */
+
+    .achievement{
+      text-align:center;
+    }
+
+    .achievement-number{
+      font-size:42px;
+      font-weight:900;
+      color:#46afff;
+    }
+
+    .achievement p{
+      margin-top:5px;
+      color:#bbc5cf;
+    }
+
+
+    /* =====================================================
+       CONTACT
+    ===================================================== */
+
+    .contact-grid{
+      max-width:1050px;
+      margin:auto;
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:20px;
+    }
+
+    .contact-card{
+      padding:30px;
+      border-radius:22px;
+      background:rgba(8,13,24,.70);
+      border:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(15px);
+    }
+
+    .contact-card h3{
+      margin-bottom:15px;
+      font-size:23px;
+    }
+
+    .contact-card p{
+      color:#bcc6d0;
+      line-height:1.8;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer{
+      padding:35px 20px;
+      text-align:center;
+      border-top:1px solid rgba(255,255,255,.08);
+      background:rgba(3,5,10,.75);
+      backdrop-filter:blur(15px);
+    }
+
+    footer p{
+      color:#9faab5;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+
+    /* =====================================================
+       LOGIN OVERLAY
+    ===================================================== */
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      z-index:5000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:rgba(0,0,0,.78);
+      backdrop-filter:blur(15px);
+    }
+
+    .overlay.active{
+      display:flex;
+    }
+
+    .login-box{
+      width:min(450px,100%);
+      padding:32px;
+      border-radius:25px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(10,20,38,.96),
+          rgba(6,10,20,.96)
+        );
+      border:1px solid rgba(60,175,255,.30);
+      box-shadow:
+        0 30px 100px rgba(0,0,0,.60),
+        0 0 50px rgba(0,130,255,.12);
+      position:relative;
+    }
+
+    .close-btn{
+      position:absolute;
+      top:15px;
+      right:15px;
+      width:35px;
+      height:35px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.07);
+      color:white;
+      font-size:20px;
+    }
+
+    .login-logo{
+      text-align:center;
+      font-size:35px;
+      font-weight:900;
+      margin-bottom:5px;
+    }
+
+    .login-logo span{
+      color:#38a8ff;
+    }
+
+    .login-subtitle{
+      text-align:center;
+      color:#9eafbf;
+      margin-bottom:25px;
+    }
+
+    .input-group{
+      margin-bottom:15px;
+    }
+
+    .input-group label{
+      display:block;
+      color:#b8c8d7;
+      font-size:13px;
+      margin-bottom:7px;
+    }
+
+    .input-group input,
+    .input-group select,
+    .input-group textarea{
+      width:100%;
+      padding:13px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      outline:none;
+      background:rgba(255,255,255,.06);
+      color:white;
+    }
+
+    .input-group select option{
+      background:#101827;
+      color:white;
+    }
+
+    .input-group textarea{
+      min-height:80px;
+      resize:vertical;
+    }
+
+    .login-submit{
+      width:100%;
+      margin-top:8px;
+    }
+
+    .login-message{
+      min-height:22px;
+      text-align:center;
+      color:#ff9c9c;
+      font-size:13px;
+      margin-top:12px;
+    }
+
+
+    /* =====================================================
+       DASHBOARD
+    ===================================================== */
+
+    .dashboard{
+      position:fixed;
+      inset:0;
+      z-index:4500;
+      display:none;
+      background:
+        radial-gradient(
+          circle at 20% 10%,
+          rgba(0,130,255,.12),
+          transparent 30%
+        ),
+        #050912;
+      overflow-y:auto;
+    }
+
+    .dashboard.active{
+      display:block;
+    }
+
+    .dashboard-nav{
+      position:sticky;
+      top:0;
+      z-index:20;
+      padding:15px 5%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      background:rgba(5,9,18,.90);
+      border-bottom:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(18px);
+    }
+
+    .dashboard-brand{
+      font-size:20px;
+      font-weight:900;
+    }
+
+    .dashboard-brand span{
+      color:#39aaff;
+    }
+
+    .dashboard-user{
+      color:#b7c8d8;
+      font-size:13px;
+    }
+
+    .logout-btn{
+      padding:9px 15px;
+      border-radius:10px;
+      border:1px solid rgba(255,100,100,.25);
+      background:rgba(255,60,60,.10);
+      color:#ffb4b4;
+    }
+
+    .dashboard-container{
+      max-width:1250px;
+      margin:auto;
+      padding:30px 5% 70px;
+    }
+
+    .welcome-card{
+      padding:30px;
+      border-radius:25px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(0,135,255,.16),
+          rgba(80,0,255,.10)
+        );
+      border:1px solid rgba(70,180,255,.20);
+      margin-bottom:25px;
+    }
+
+    .welcome-card h1{
+      font-size:clamp(28px,5vw,45px);
+      margin-bottom:8px;
+    }
+
+    .welcome-card p{
+      color:#b9c8d5;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:15px;
+      margin-bottom:25px;
+    }
+
+    .stat{
+      padding:22px;
+      border-radius:20px;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .stat-icon{
+      font-size:25px;
+      margin-bottom:12px;
+    }
+
+    .stat-number{
+      font-size:30px;
+      font-weight:900;
+    }
+
+    .stat-label{
+      color:#8fa2b3;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .dashboard-section{
+      margin-top:25px;
+    }
+
+    .dashboard-section h2{
+      margin-bottom:15px;
+      font-size:25px;
+    }
+
+    .dashboard-table{
+      width:100%;
+      min-width:650px;
+      border-collapse:collapse;
+    }
+
+    .dashboard-table-wrap{
+      overflow:auto;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.035);
+    }
+
+    .empty{
+      padding:35px;
+      text-align:center;
+      color:#8293a3;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .present{
+      background:rgba(0,210,130,.12);
+      color:#68e8b0;
+    }
+
+    .absent{
+      background:rgba(255,70,70,.12);
+      color:#ff9b9b;
+    }
+
+    .material-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:15px;
+    }
+
+    .material-box{
+      padding:20px;
+      border-radius:18px;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .material-box h3{
+      margin-bottom:8px;
+    }
+
+    .material-box p{
+      color:#9fb0bf;
+      font-size:13px;
+      line-height:1.5;
+      margin-bottom:15px;
+    }
+
+
+    /* =====================================================
+       ADMIN
+    ===================================================== */
+
+    .admin-dashboard{
+      position:fixed;
+      inset:0;
+      z-index:4600;
+      display:none;
+      background:#050912;
+      overflow-y:auto;
+    }
+
+    .admin-dashboard.active{
+      display:block;
+    }
+
+    .admin-nav{
+      position:sticky;
+      top:0;
+      z-index:30;
+      padding:14px 4%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:rgba(4,8,16,.94);
+      border-bottom:1px solid rgba(255,255,255,.09);
+      backdrop-filter:blur(18px);
+    }
+
+    .admin-title{
+      font-weight:900;
+      font-size:20px;
+    }
+
+    .admin-title span{
+      color:#38a8ff;
+    }
+
+    .admin-container{
+      max-width:1400px;
+      margin:auto;
+      padding:25px 4% 70px;
+    }
+
+    .admin-stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:15px;
+      margin-bottom:25px;
+    }
+
+    .admin-card{
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      padding:22px;
+    }
+
+    .admin-card h2{
+      font-size:18px;
+      margin-bottom:15px;
+    }
+
+    .admin-form-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+
+    .admin-form-grid .full{
+      grid-column:1/-1;
+    }
+
+    .admin-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .small-btn{
+      padding:8px 11px;
+      border-radius:9px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:white;
+      font-size:12px;
+    }
+
+    .small-btn:hover{
+      background:rgba(0,150,255,.15);
+    }
+
+    .danger-btn{
+      color:#ff9f9f;
+      border-color:rgba(255,80,80,.20);
+    }
+
+    .admin-section{
+      margin-top:22px;
+    }
+
+    .admin-section h2{
+      margin-bottom:14px;
+    }
+
+    .admin-table-wrap{
+      overflow:auto;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .admin-table{
+      width:100%;
+      min-width:900px;
+      border-collapse:collapse;
+      background:rgba(255,255,255,.025);
+    }
+
+    .admin-table th,
+    .admin-table td{
+      padding:12px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .admin-table th{
+      color:#61baff;
+      background:rgba(0,130,220,.09);
+    }
+
+    .admin-message{
+      min-height:22px;
+      color:#6edaff;
+      margin-top:10px;
+      font-size:13px;
+    }
+
+    .password-popup{
+      position:fixed;
+      inset:0;
+      z-index:7000;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      background:rgba(0,0,0,.80);
+      backdrop-filter:blur(12px);
+    }
+
+    .password-popup.active{
+      display:flex;
+    }
+
+    .password-card{
+      width:min(430px,100%);
+      padding:30px;
+      border-radius:22px;
+      background:#0b1321;
+      border:1px solid rgba(70,180,255,.30);
+      text-align:center;
+    }
+
+    .generated-password{
+      margin:20px 0;
+      padding:18px;
+      border-radius:15px;
+      background:rgba(0,150,255,.10);
+      border:1px solid rgba(0,150,255,.20);
+      font-size:23px;
+      font-weight:900;
+      letter-spacing:1px;
+      color:#71c7ff;
+      word-break:break-all;
+    }
+
+
+    /* =====================================================
+       TOP BUTTON
+    ===================================================== */
+
+    #topBtn{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      width:45px;
+      height:45px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.15);
+      background:rgba(8,15,27,.80);
+      color:white;
+      cursor:pointer;
+      display:none;
+      z-index:999;
+      backdrop-filter:blur(10px);
+      font-size:18px;
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media(max-width:900px){
+
+      .nav-links{
+        position:absolute;
+        top:68px;
+        left:4%;
+        right:4%;
+        display:none;
+        flex-direction:column;
+        align-items:stretch;
+        padding:12px;
+        border-radius:18px;
+        background:rgba(5,8,17,.95);
+        border:1px solid rgba(255,255,255,.10);
+        backdrop-filter:blur(20px);
+      }
+
+      .nav-links.active{
+        display:flex;
+      }
+
+      .nav-links a{
+        text-align:center;
+      }
+
+      .menu-btn{
+        display:block;
+      }
+
+      .grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .stats,
+      .admin-stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .material-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .admin-form-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+
+    @media(max-width:600px){
+
+      section{
+        padding:70px 5%;
+      }
+
+      .hero{
+        padding-top:110px;
+      }
+
+      .hero h1{
+        letter-spacing:-2px;
+      }
+
+      .grid,
+      .test-box,
+      .contact-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero-buttons{
+        flex-direction:column;
+      }
+
+      .hero-buttons .btn{
+        width:100%;
+      }
+
+      .stats,
+      .admin-stats,
+      .material-grid,
+      .admin-form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .dashboard-nav{
+        flex-wrap:wrap;
+      }
+
+      .dashboard-user{
+        order:3;
+        width:100%;
+      }
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<video
+  id="bgVideo"
+  autoplay
+  muted
+  loop
+  playsinline
+  preload="auto">
+
+  <source
+    src="https://raw.githubusercontent.com/armraryan4-source/nextgen-tution-centre/main/VID-20260915-WA0032.mp4"
+    type="video/mp4">
+
+</video>
+
+<div class="video-overlay"></div>
+<div class="ambient-glow"></div>
+<div class="ambient-glow2"></div>
+
+
+<!-- =====================================================
+     NAVBAR
+===================================================== -->
+
+<header class="navbar">
+
+  <a href="#home"
+     class="logo">
+    NEXT<span>GEN</span>
+  </a>
+
+  <button
+    class="menu-btn"
+    id="menuBtn">
+    ☰
+  </button>
+
+  <ul
+    class="nav-links"
+    id="navLinks">
+
+    <li>
+      <a href="#home">Home</a>
+    </li>
+
+    <li>
+      <a href="#classes">Classes</a>
+    </li>
+
+    <li>
+      <a href="#tests">Tests</a>
+    </li>
+
+    <li>
+      <a href="#results">Results</a>
+    </li>
+
+    <li>
+      <a href="#study">Study Material</a>
+    </li>
+
+    <li>
+      <a href="#achievements">Achievements</a>
+    </li>
+
+    <li>
+      <a href="#gallery">Gallery</a>
+    </li>
+
+    <li>
+      <a href="#contact">Contact</a>
+    </li>
+
+    <li>
+      <a
+        href="javascript:void(0)"
+        class="login-nav-btn"
+        onclick="openLogin()">
+        🎓 Student Login
+      </a>
+    </li>
+
+  </ul>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN WEBSITE
+===================================================== -->
+
+<main>
+
+  <!-- HOME -->
+
+  <section
+    class="hero"
+    id="home">
+
+    <div class="hero-content">
+
+      <div class="badge">
+        📚 Classes 6th – 10th
+      </div>
+
+      <h1>
+        NEXT<span>GEN</span>
+        <br>
+        TUITION CENTRE
+      </h1>
+
+      <h2>
+        Learn Better. Score Better. Grow Better.
+      </h2>
+
+      <p>
+        A focused learning environment for students
+        of Classes 6th to 10th with regular practice,
+        tests, study material and academic guidance.
+      </p>
+
+      <div class="hero-buttons">
+
+        <a
+          href="#classes"
+          class="btn btn-primary">
+          Explore Classes
+        </a>
+
+        <a
+          href="javascript:void(0)"
+          onclick="openLogin()"
+          class="btn btn-secondary">
+          🎓 Student Login
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CLASSES -->
+
+  <section id="classes">
+
+    <div class="section-title">
+
+      <div class="small">
+        OUR CLASSES
+      </div>
+
+      <h2>
+        Classes 6th – 10th
+      </h2>
+
+      <p>
+        Strong concepts, regular practice and
+        exam-focused preparation.
+      </p>
+
+    </div>
+
+
+    <div class="grid">
+
+      <div class="card class-card">
+        <div class="class-number">6</div>
+        <h3>Class 6th</h3>
+        <div class="subject-list">
+          Maths • Science • SST
+        </div>
+      </div>
+
+      <div class="card class-card">
+        <div class="class-number">7</div>
+        <h3>Class 7th</h3>
+        <div class="subject-list">
+          Maths • Science • SST
+        </div>
+      </div>
+
+      <div class="card class-card">
+        <div class="class-number">8</div>
+        <h3>Class 8th</h3>
+        <div class="subject-list">
+          Maths • Science • SST
+        </div>
+      </div>
+
+      <div class="card class-card">
+        <div class="class-number">9</div>
+        <h3>Class 9th</h3>
+        <div class="subject-list">
+          Maths • Science • SST
+        </div>
+      </div>
+
+      <div class="card class-card">
+        <div class="class-number">10</div>
+        <h3>Class 10th</h3>
+        <div class="subject-list">
+          Maths • Science • SST
+        </div>
+      </div>
+
+      <div class="card">
+
+        <div class="card-icon">
+          🎯
+        </div>
+
+        <h3>
+          Exam Preparation
+        </h3>
+
+        <p>
+          Chapter-wise practice, revision,
+          tests and board-oriented preparation.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- TESTS -->
+
+  <section id="tests">
+
+    <div class="section-title">
+
+      <div class="small">
+        PRACTICE
+      </div>
+
+      <h2>
+        Tests & Practice
+      </h2>
+
+      <p>
+        Regular testing helps students understand
+        their preparation and improve consistently.
+      </p>
+
+    </div>
+
+
+    <div class="test-box">
+
+      <div class="test-card">
+
+        <h3>
+          📝 Chapter Tests
+        </h3>
+
+        <p>
+          Chapter-wise tests for Maths, Science
+          and Social Science.
+        </p>
+
+        <a
+          href="javascript:void(0)"
+          onclick="openLogin()"
+          class="btn btn-primary">
+          Student Test Area
+        </a>
+
+      </div>
+
+
+      <div class="test-card">
+
+        <h3>
+          🏆 Mock Tests
+        </h3>
+
+        <p>
+          Full-length practice tests for
+          exam preparation.
+        </p>
+
+        <a
+          href="javascript:void(0)"
+          onclick="openLogin()"
+          class="btn btn-secondary">
+          View Student Area
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- RESULTS -->
+
+  <section id="results">
+
+    <div class="section-title">
+
+      <div class="small">
+        STUDENT PERFORMANCE
+      </div>
+
+      <h2>
+        Results
+      </h2>
+
+      <p>
+        Individual results are available
+        inside the Student Dashboard.
+      </p>
+
+    </div>
+
+
+    <div class="result-table-wrap">
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Student</th>
+            <th>Class</th>
+            <th>Subject</th>
+            <th>Achievement</th>
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr>
+            <td>Student Performance</td>
+            <td>6th–10th</td>
+            <td>All Subjects</td>
+            <td>View after Login</td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <!-- STUDY -->
+
+  <section id="study">
+
+    <div class="section-title">
+
+      <div class="small">
+        LEARNING RESOURCES
+      </div>
+
+      <h2>
+        Study Material
+      </h2>
+
+      <p>
+        Notes, worksheets, revision material
+        and useful learning resources.
+      </p>
+
+    </div>
+
+
+    <div class="grid">
+
+      <div class="card material-card">
+
+        <div class="card-icon">
+          📖
+        </div>
+
+        <h3>
+          Class 6–8
+        </h3>
+
+        <p>
+          NCERT-based notes, worksheets and
+          practice resources.
+        </p>
+
+        <a
+          href="javascript:void(0)"
+          onclick="openLogin()"
+          class="btn btn-secondary">
+          Student Material
+        </a>
+
+      </div>
+
+
+      <div class="card material-card">
+
+        <div class="card-icon">
+          📚
+        </div>
+
+        <h3>
+          Class 9th
+        </h3>
+
+        <p>
+          Concept notes, important questions
+          and revision resources.
+        </p>
+
+        <a
+          href="javascript:void(0)"
+          onclick="openLogin()"
+          class="btn btn-secondary">
+          Student Material
+        </a>
+
+      </div>
+
+
+      <div class="card material-card">
+
+        <div class="card-icon">
+          🎓
+        </div>
+
+        <h3>
+          Class 10th
+        </h3>
+
+        <p>
+          Board preparation, revision sheets
+          and practice material.
+        </p>
+
+        <a
+          href="javascript:void(0)"
+          onclick="openLogin()"
+          class="btn btn-secondary">
+          Student Material
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ACHIEVEMENTS -->
+
+  <section id="achievements">
+
+    <div class="section-title">
+
+      <div class="small">
+        NEXTGEN
+      </div>
+
+      <h2>
+        Achievements
+      </h2>
+
+      <p>
+        A growing learning community focused
+        on consistent academic improvement.
+      </p>
+
+    </div>
+
+
+    <div class="grid">
+
+      <div class="card achievement">
+
+        <div class="achievement-number">
+          6–10
+        </div>
+
+        <p>
+          Classes Covered
+        </p>
+
+      </div>
+
+
+      <div class="card achievement">
+
+        <div class="achievement-number">
+          📚
+        </div>
+
+        <p>
+          Regular Learning
+        </p>
+
+      </div>
+
+
+      <div class="card achievement">
+
+        <div class="achievement-number">
+          📝
+        </div>
+
+        <p>
+          Test Based Practice
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- GALLERY -->
+
+  <section id="gallery">
+
+    <div class="section-title">
+
+      <div class="small">
+        OUR CENTRE
+      </div>
+
+      <h2>
+        Gallery
+      </h2>
+
+      <p>
+        Classes, activities, tests and
+        student achievements.
+      </p>
+
+    </div>
+
+
+    <div class="grid">
+
+      <div class="card achievement">
+        📚 Classroom
+      </div>
+
+      <div class="card achievement">
+        📝 Test Day
+      </div>
+
+      <div class="card achievement">
+        🏆 Student Achievement
+      </div>
+
+      <div class="card achievement">
+        🎓 Learning Session
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- CONTACT -->
+
+  <section id="contact">
+
+    <div class="section-title">
+
+      <div class="small">
+        GET IN TOUCH
+      </div>
+
+      <h2>
+        Contact NextGen
+      </h2>
+
+      <p>
+        Admissions, classes and other enquiries
+        ke liye contact karein 
+        phone-8010595529
+        whatsapp-8010595529
+        E-mail-armr.aryan4@gmail.com
+      </p>
+
+    </div>
+
+
+    <div class="contact-grid">
+
+      <div class="contact-card">
+
+        <h3>
+          📍 Centre
+        </h3>
+
+        <p>
+          NextGen Tuition Centre
+          <br><br>
+          Address Gali no. 2 behind saint rose public school nihal vihar new delhi
+        </p>
+
+      </div>
+
+
+      <div class="contact-card">
+
+        <h3>
+          🎓 Student Portal
+        </h3>
+
+        <p>
+          Attendance, tests, results aur
+          study material ke liye student login karein.
+        </p>
+
+        <div style="margin-top:20px;">
+
+          <a
+            href="javascript:void(0)"
+            onclick="openLogin()"
+            class="btn btn-primary">
+            Student Login
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+  <h3>
+    NEXTGEN TUITION CENTRE
+  </h3>
+
+  <p>
+    Learn Better. Score Better. Grow Better.
+  </p>
+
+  <p style="margin-top:10px;">
+    © <span id="year"></span>
+    NextGen Tuition Centre.
+    All Rights Reserved.
+  </p>
+
+</footer>
+
+
+<!-- =====================================================
+     LOGIN OVERLAY
+===================================================== -->
+
+<div
+  class="overlay"
+  id="loginOverlay">
+
+  <div class="login-box">
+
+    <button
+      class="close-btn"
+      onclick="closeLogin()">
+      ×
+    </button>
+
+    <div class="login-logo">
+      NEXT<span>GEN</span>
+    </div>
+
+    <div class="login-subtitle">
+      Student & Admin Portal
+    </div>
+
+
+    <div class="input-group">
+
+      <label>
+        Username / Admin ID
+      </label>
+
+      <input
+        id="loginUsername"
+        type="text"
+        placeholder="e.g. NG001">
+
+    </div>
+
+
+    <div class="input-group">
+
+      <label>
+        Password
+      </label>
+
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Enter password"
+        onkeydown="if(event.key==='Enter') login()">
+
+    </div>
+
+
+    <button
+      class="btn btn-primary login-submit"
+      onclick="login()"
+      id="loginButton">
+
+      🔐 Login
+
+    </button>
+
+
+    <div
+      class="login-message"
+      id="loginMessage">
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     STUDENT DASHBOARD
+===================================================== -->
+
+<div
+  class="dashboard"
+  id="studentDashboard">
+
+
+  <div class="dashboard-nav">
+
+    <div class="dashboard-brand">
+      NEXT<span>GEN</span> STUDENT
+    </div>
+
+    <div
+      class="dashboard-user"
+      id="dashboardUser">
+    </div>
+
+    <button
+      class="logout-btn"
+      onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+
+  <div class="dashboard-container">
+
+
+    <div class="welcome-card">
+
+      <h1>
+        Welcome, <span id="studentName">Student</span> 👋
+      </h1>
+
+      <p>
+        Student ID:
+        <strong id="studentId"></strong>
+        &nbsp; • &nbsp;
+        Class:
+        <strong id="studentClass"></strong>
+      </p>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="stats">
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          📅
+        </div>
+
+        <div
+          class="stat-number"
+          id="attendancePercent">
+          0%
+        </div>
+
+        <div class="stat-label">
+          Attendance
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          ✅
+        </div>
+
+        <div
+          class="stat-number"
+          id="presentCount">
+          0
+        </div>
+
+        <div class="stat-label">
+          Present
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          📝
+        </div>
+
+        <div
+          class="stat-number"
+          id="testCount">
+          0
+        </div>
+
+        <div class="stat-label">
+          Tests
+        </div>
+
+      </div>
+
+
+      <div class="stat">
+
+        <div class="stat-icon">
+          🏆
+        </div>
+
+        <div
+          class="stat-number"
+          id="resultCount">
+          0
+        </div>
+
+        <div class="stat-label">
+          Results
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ATTENDANCE -->
+
+    <div class="dashboard-section">
+
+      <h2>
+        📅 Attendance
+      </h2>
+
+      <div
+        class="dashboard-table-wrap"
+        id="attendanceTable">
+      </div>
+
+    </div>
+
+
+    <!-- TESTS -->
+
+    <div class="dashboard-section">
+
+      <h2>
+        📝 Tests
+      </h2>
+
+      <div
+        class="dashboard-table-wrap"
+        id="testsTable">
+      </div>
+
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div class="dashboard-section">
+
+      <h2>
+        🏆 Results
+      </h2>
+
+      <div
+        class="dashboard-table-wrap"
+        id="resultsTable">
+      </div>
+
+    </div>
+
+
+    <!-- MATERIAL -->
+
+    <div class="dashboard-section">
+
+      <h2>
+        📚 Study Material
+      </h2>
+
+      <div
+        class="material-grid"
+        id="studentMaterials">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADMIN DASHBOARD
+===================================================== -->
+
+<div
+  class="admin-dashboard"
+  id="adminDashboard">
+
+
+  <div class="admin-nav">
+
+    <div class="admin-title">
+      NEXT<span>GEN</span> ADMIN CENTER
+    </div>
+
+    <button
+      class="logout-btn"
+      onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+
+  <div class="admin-container">
+
+
+    <!-- ADMIN STATS -->
+
+    <div class="admin-stats">
+
+      <div class="admin-card">
+
+        <div style="font-size:25px;">
+          👨‍🎓
+        </div>
+
+        <div
+          style="font-size:30px;font-weight:900;"
+          id="adminStudentCount">
+          0
+        </div>
+
+        <div style="color:#8fa2b3;">
+          Students
+        </div>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <div style="font-size:25px;">
+          📅
+        </div>
+
+        <div
+          style="font-size:30px;font-weight:900;"
+          id="adminAttendanceCount">
+          0
+        </div>
+
+        <div style="color:#8fa2b3;">
+          Attendance Records
+        </div>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <div style="font-size:25px;">
+          📝
+        </div>
+
+        <div
+          style="font-size:30px;font-weight:900;"
+          id="adminTestCount">
+          0
+        </div>
+
+        <div style="color:#8fa2b3;">
+          Tests
+        </div>
+
+      </div>
+
+
+      <div class="admin-card">
+
+        <div style="font-size:25px;">
+          🏆
+        </div>
+
+        <div
+          style="font-size:30px;font-weight:900;"
+          id="adminResultCount">
+          0
+        </div>
+
+        <div style="color:#8fa2b3;">
+          Results
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ADD STUDENT -->
+
+    <div class="admin-card">
+
+      <h2>
+        ➕ Add Student
+      </h2>
+
+      <div class="admin-form-grid">
+
+        <div class="input-group">
+
+          <label>
+            Student Name
+          </label>
+
+          <input
+            id="newStudentName"
+            placeholder="Student name">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Class
+          </label>
+
+          <select id="newStudentClass">
+
+            <option value="">
+              Select Class
+            </option>
+
+            <option>6th</option>
+            <option>7th</option>
+            <option>8th</option>
+            <option>9th</option>
+            <option>10th</option>
+
+          </select>
+
+        </div>
+
+        <div style="display:flex;align-items:end;">
+
+          <button
+            class="btn btn-primary"
+            onclick="addStudent()">
+
+            Add Student
+
+          </button>
+
+        </div>
+
+      </div>
+
+      <div
+        class="admin-message"
+        id="studentMessage">
+      </div>
+
+    </div>
+
+
+    <!-- ATTENDANCE FORM -->
+
+    <div class="admin-card admin-section">
+
+      <h2>
+        📅 Mark Attendance
+      </h2>
+
+      <div class="admin-form-grid">
+
+        <div class="input-group">
+
+          <label>
+            Student
+          </label>
+
+          <select id="attendanceStudent"></select>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Date
+          </label>
+
+          <input
+            type="date"
+            id="attendanceDate">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Status
+          </label>
+
+          <select id="attendanceStatus">
+
+            <option value="Present">
+              Present
+            </option>
+
+            <option value="Absent">
+              Absent
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Remarks
+          </label>
+
+          <input
+            id="attendanceRemarks"
+            placeholder="Optional">
+
+        </div>
+
+
+        <div>
+
+          <button
+            class="btn btn-primary"
+            onclick="saveAttendance()">
+
+            Save Attendance
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- TEST FORM -->
+
+    <div class="admin-card admin-section">
+
+      <h2>
+        📝 Add Test Marks
+      </h2>
+
+      <div class="admin-form-grid">
+
+        <div class="input-group">
+
+          <label>
+            Student
+          </label>
+
+          <select id="testStudent"></select>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Test Name
+          </label>
+
+          <input
+            id="testName"
+            placeholder="Chapter Test 1">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Subject
+          </label>
+
+          <input
+            id="testSubject"
+            placeholder="Maths">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Max Marks
+          </label>
+
+          <input
+            type="number"
+            id="testMax"
+            placeholder="50">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Marks
+          </label>
+
+          <input
+            type="number"
+            id="testMarks"
+            placeholder="45">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Date
+          </label>
+
+          <input
+            type="date"
+            id="testDate">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Remarks
+          </label>
+
+          <input
+            id="testRemarks"
+            placeholder="Good">
+
+        </div>
+
+
+        <div>
+
+          <button
+            class="btn btn-primary"
+            onclick="saveTest()">
+
+            Save Test
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- RESULT FORM -->
+
+    <div class="admin-card admin-section">
+
+      <h2>
+        🏆 Add Result
+      </h2>
+
+      <div class="admin-form-grid">
+
+        <div class="input-group">
+
+          <label>
+            Student
+          </label>
+
+          <select id="resultStudent"></select>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Exam
+          </label>
+
+          <input
+            id="resultExam"
+            placeholder="Monthly Exam">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Subject
+          </label>
+
+          <input
+            id="resultSubject"
+            placeholder="Science">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Marks
+          </label>
+
+          <input
+            type="number"
+            id="resultMarks">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Max Marks
+          </label>
+
+          <input
+            type="number"
+            id="resultMax">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Grade
+          </label>
+
+          <input
+            id="resultGrade"
+            placeholder="A+">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Date
+          </label>
+
+          <input
+            type="date"
+            id="resultDate">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Remarks
+          </label>
+
+          <input
+            id="resultRemarks">
+
+        </div>
+
+
+        <div>
+
+          <button
+            class="btn btn-primary"
+            onclick="saveResult()">
+
+            Save Result
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- MATERIAL FORM -->
+
+    <div class="admin-card admin-section">
+
+      <h2>
+        📚 Add Study Material
+      </h2>
+
+      <div class="admin-form-grid">
+
+        <div class="input-group">
+
+          <label>
+            Title
+          </label>
+
+          <input
+            id="materialTitle"
+            placeholder="Class 10 Maths Notes">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Class
+          </label>
+
+          <select id="materialClass">
+
+            <option>All</option>
+            <option>6th</option>
+            <option>7th</option>
+            <option>8th</option>
+            <option>9th</option>
+            <option>10th</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Subject
+          </label>
+
+          <input
+            id="materialSubject"
+            placeholder="Maths">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Link
+          </label>
+
+          <input
+            id="materialUrl"
+            placeholder="https://...">
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Description
+          </label>
+
+          <input
+            id="materialDescription">
+
+        </div>
+
+
+        <div>
+
+          <button
+            class="btn btn-primary"
+            onclick="saveMaterial()">
+
+            Add Material
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- STUDENTS TABLE -->
+
+    <div class="admin-section">
+
+      <h2>
+        👨‍🎓 Student Management
+      </h2>
+
+      <div class="admin-table-wrap">
+
+        <table class="admin-table">
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Username</th>
+              <th>Status</th>
+              <th>Actions</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody
+            id="adminStudentsBody">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- ATTENDANCE TABLE -->
+
+    <div class="admin-section">
+
+      <h2>
+        📅 Attendance Records
+      </h2>
+
+      <div class="admin-table-wrap">
+
+        <table class="admin-table">
+
+          <thead>
+
+            <tr>
+
+              <th>Date</th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Status</th>
+              <th>Remarks</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody
+            id="adminAttendanceBody">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- TEST TABLE -->
+
+    <div class="admin-section">
+
+      <h2>
+        📝 Test Records
+      </h2>
+
+      <div class="admin-table-wrap">
+
+        <table class="admin-table">
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+              <th>Student</th>
+              <th>Test</th>
+              <th>Subject</th>
+              <th>Marks</th>
+              <th>%</th>
+              <th>Date</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody
+            id="adminTestsBody">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+
+    <!-- RESULTS TABLE -->
+
+    <div class="admin-section">
+
+      <h2>
+        🏆 Result Records
+      </h2>
+
+      <div class="admin-table-wrap">
+
+        <table class="admin-table">
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+              <th>Student</th>
+              <th>Exam</th>
+              <th>Subject</th>
+              <th>Marks</th>
+              <th>%</th>
+              <th>Grade</th>
+              <th>Date</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody
+            id="adminResultsBody">
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     PASSWORD POPUP
+===================================================== -->
+
+<div
+  class="password-popup"
+  id="passwordPopup">
+
+  <div class="password-card">
+
+    <h2>
+      🔐 Student Password
+    </h2>
+
+    <p
+      style="color:#9eafbf;margin-top:8px;">
+      Is password ko student ko securely de sakte ho.
+    </p>
+
+    <div
+      class="generated-password"
+      id="generatedPassword">
+    </div>
+
+    <button
+      class="btn btn-primary"
+      onclick="copyGeneratedPassword()">
+
+      📋 Copy Password
+
+    </button>
+
+    <button
+      class="btn btn-secondary"
+      onclick="closePasswordPopup()"
+      style="margin-top:10px;">
+
+      Close
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- TOP -->
+
+<button
+  id="topBtn"
+  onclick="window.scrollTo({
+    top:0,
+    behavior:'smooth'
+  })">
+
+  ↑
+
+</button>
+
+
+<script>
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+let sessionToken = null;
+let currentUserType = null;
+let adminData = null;
+let generatedPasswordValue = '';
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+const menuBtn =
+  document.getElementById('menuBtn');
+
+const navLinks =
+  document.getElementById('navLinks');
+
+menuBtn.addEventListener(
+  'click',
+  function(){
+
+    navLinks.classList.toggle(
+      'active'
+    );
+
+  }
+);
+
+
+document
+  .querySelectorAll('.nav-links a')
+  .forEach(function(link){
+
+    link.addEventListener(
+      'click',
+      function(){
+
+        navLinks.classList.remove(
+          'active'
+        );
+
+      }
+    );
+
+  });
+
+
+/* =========================================================
+   VIDEO
+========================================================= */
+
+const video =
+  document.getElementById('bgVideo');
+
+video.muted = true;
+
+const playVideo =
+  video.play();
+
+if(
+  playVideo !== undefined
+){
+
+  playVideo.catch(
+    function(){
+      console.log(
+        'Video autoplay waiting.'
+      );
+    }
+  );
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function openLogin(){
+
+  document
+    .getElementById('loginOverlay')
+    .classList.add('active');
+
+  document
+    .getElementById('loginUsername')
+    .focus();
+}
+
+
+function closeLogin(){
+
+  document
+    .getElementById('loginOverlay')
+    .classList.remove('active');
+
+}
+
+
+function login(){
+
+  const username =
+    document
+      .getElementById('loginUsername')
+      .value
+      .trim();
+
+  const password =
+    document
+      .getElementById('loginPassword')
+      .value;
+
+  const message =
+    document
+      .getElementById('loginMessage');
+
+  const button =
+    document
+      .getElementById('loginButton');
+
+
+  if(
+    !username ||
+    !password
+  ){
+
+    message.textContent =
+      'Username aur password enter karo.';
+
+    return;
+  }
+
+
+  button.disabled = true;
+  button.textContent =
+    'Logging in...';
+
+  message.textContent =
+    '';
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(result){
+
+        button.disabled = false;
+        button.textContent =
+          '🔐 Login';
+
+        if(
+          result &&
+          result.success
+        ){
+
+          sessionToken =
+            result.token;
+
+          currentUserType =
+            result.type;
+
+          closeLogin();
+
+          document
+            .getElementById('loginPassword')
+            .value = '';
+
+          if(
+            result.type ===
+            'ADMIN'
+          ){
+
+            openAdminDashboard();
+
+          }else{
+
+            openStudentDashboard();
+
+          }
+
+        }else{
+
+          message.textContent =
+            result.message ||
+            'Login failed.';
+
+        }
+
+      }
+    )
+    .withFailureHandler(
+      function(error){
+
+        button.disabled = false;
+        button.textContent =
+          '🔐 Login';
+
+        message.textContent =
+          error.message ||
+          'Server error.';
+
+      }
+    )
+    .loginUser(
+      username,
+      password
+    );
+
+}
+
+
+/* =========================================================
+   STUDENT DASHBOARD
+========================================================= */
+
+function openStudentDashboard(){
+
+  document
+    .getElementById('studentDashboard')
+    .classList.add('active');
+
+  loadStudentDashboard();
+}
+
+
+function loadStudentDashboard(){
+
+  google.script.run
+    .withSuccessHandler(
+      function(data){
+
+        if(
+          !data ||
+          !data.success
+        ){
+
+          alert(
+            data.message ||
+            'Unable to load dashboard.'
+          );
+
+          logout();
+          return;
+        }
+
+        renderStudentDashboard(
+          data
+        );
+
+      }
+    )
+    .withFailureHandler(
+      function(error){
+
+        alert(
+          error.message ||
+          'Dashboard error.'
+        );
+
+      }
+    )
+    .getStudentDashboard(
+      sessionToken
+    );
+
+}
+
+
+function renderStudentDashboard(data){
+
+  const student =
+    data.student;
+
+  document
+    .getElementById('studentName')
+    .textContent =
+    student.name || 'Student';
+
+  document
+    .getElementById('studentId')
+    .textContent =
+    student.id || '';
+
+  document
+    .getElementById('studentClass')
+    .textContent =
+    student.className || 'Not Assigned';
+
+  document
+    .getElementById('dashboardUser')
+    .textContent =
+    student.id +
+    ' • ' +
+    (student.className || 'Class not assigned');
+
+
+  const attendance =
+    data.attendance;
+
+  document
+    .getElementById('attendancePercent')
+    .textContent =
+    attendance.percentage + '%';
+
+  document
+    .getElementById('presentCount')
+    .textContent =
+    attendance.present;
+
+
+  document
+    .getElementById('testCount')
+    .textContent =
+    data.tests.length;
+
+
+  document
+    .getElementById('resultCount')
+    .textContent =
+    data.results.length;
+
+
+  renderAttendance(
+    attendance.records
+  );
+
+  renderTests(
+    data.tests
+  );
+
+  renderResults(
+    data.results
+  );
+
+  renderMaterials(
+    data.materials
+  );
+
+}
+
+
+function renderAttendance(records){
+
+  const container =
+    document.getElementById(
+      'attendanceTable'
+    );
+
+  if(
+    !records ||
+    records.length === 0
+  ){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'Attendance records abhi available nahi hain.' +
+      '</div>';
+
+    return;
+  }
+
+
+  let html =
+    '<table class="dashboard-table">' +
+
+    '<thead>' +
+
+    '<tr>' +
+    '<th>Date</th>' +
+    '<th>Status</th>' +
+    '<th>Remarks</th>' +
+    '</tr>' +
+
+    '</thead>' +
+
+    '<tbody>';
+
+
+  records.forEach(function(item){
+
+    const cls =
+      item.status
+        .toLowerCase() ===
+      'present'
+        ? 'present'
+        : 'absent';
+
+    html +=
+      '<tr>' +
+
+      '<td>' +
+      safe(item.date) +
+      '</td>' +
+
+      '<td>' +
+      '<span class="pill ' +
+      cls +
+      '">' +
+      safe(item.status) +
+      '</span>' +
+      '</td>' +
+
+      '<td>' +
+      safe(item.remarks) +
+      '</td>' +
+
+      '</tr>';
+
+  });
+
+
+  html +=
+    '</tbody></table>';
+
+  container.innerHTML =
+    html;
+}
+
+
+function renderTests(tests){
+
+  const container =
+    document.getElementById(
+      'testsTable'
+    );
+
+  if(
+    !tests ||
+    tests.length === 0
+  ){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'Tests abhi available nahi hain.' +
+      '</div>';
+
+    return;
+  }
+
+
+  let html =
+    '<table class="dashboard-table">' +
+
+    '<thead>' +
+
+    '<tr>' +
+    '<th>Test</th>' +
+    '<th>Subject</th>' +
+    '<th>Marks</th>' +
+    '<th>Percentage</th>' +
+    '<th>Date</th>' +
+    '</tr>' +
+
+    '</thead><tbody>';
+
+
+  tests.forEach(function(item){
+
+    html +=
+      '<tr>' +
+
+      '<td>' +
+      safe(item.name) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.subject) +
+      '</td>' +
+
+      '<td>' +
+      item.marks +
+      ' / ' +
+      item.maxMarks +
+      '</td>' +
+
+      '<td>' +
+      item.percentage +
+      '%' +
+      '</td>' +
+
+      '<td>' +
+      safe(item.date) +
+      '</td>' +
+
+      '</tr>';
+
+  });
+
+
+  html +=
+    '</tbody></table>';
+
+  container.innerHTML =
+    html;
+}
+
+
+function renderResults(results){
+
+  const container =
+    document.getElementById(
+      'resultsTable'
+    );
+
+  if(
+    !results ||
+    results.length === 0
+  ){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'Results abhi available nahi hain.' +
+      '</div>';
+
+    return;
+  }
+
+
+  let html =
+    '<table class="dashboard-table">' +
+
+    '<thead>' +
+
+    '<tr>' +
+    '<th>Exam</th>' +
+    '<th>Subject</th>' +
+    '<th>Marks</th>' +
+    '<th>%</th>' +
+    '<th>Grade</th>' +
+    '<th>Date</th>' +
+    '</tr>' +
+
+    '</thead><tbody>';
+
+
+  results.forEach(function(item){
+
+    html +=
+      '<tr>' +
+
+      '<td>' +
+      safe(item.exam) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.subject) +
+      '</td>' +
+
+      '<td>' +
+      item.marks +
+      ' / ' +
+      item.maxMarks +
+      '</td>' +
+
+      '<td>' +
+      item.percentage +
+      '%' +
+      '</td>' +
+
+      '<td>' +
+      safe(item.grade) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.date) +
+      '</td>' +
+
+      '</tr>';
+
+  });
+
+
+  html +=
+    '</tbody></table>';
+
+  container.innerHTML =
+    html;
+}
+
+
+function renderMaterials(materials){
+
+  const container =
+    document.getElementById(
+      'studentMaterials'
+    );
+
+  if(
+    !materials ||
+    materials.length === 0
+  ){
+
+    container.innerHTML =
+      '<div class="empty">' +
+      'Study material abhi available nahi hai.' +
+      '</div>';
+
+    return;
+  }
+
+
+  let html = '';
+
+
+  materials.forEach(function(item){
+
+    html +=
+      '<div class="material-box">' +
+
+      '<h3>' +
+      '📚 ' +
+      safe(item.title) +
+      '</h3>' +
+
+      '<p>' +
+      safe(item.subject) +
+      '<br>' +
+      safe(item.description) +
+      '</p>';
+
+
+    if(item.url){
+
+      html +=
+        '<a ' +
+        'href="' +
+        safeAttr(item.url) +
+        '" ' +
+        'target="_blank" ' +
+        'class="btn btn-primary">' +
+        'Open Material' +
+        '</a>';
+
+    }
+
+
+    html +=
+      '</div>';
+
+  });
+
+
+  container.innerHTML =
+    html;
+}
+
+
+/* =========================================================
+   ADMIN DASHBOARD
+========================================================= */
+
+function openAdminDashboard(){
+
+  document
+    .getElementById('adminDashboard')
+    .classList.add('active');
+
+  loadAdminDashboard();
+}
+
+
+function loadAdminDashboard(){
+
+  google.script.run
+    .withSuccessHandler(
+      function(data){
+
+        if(
+          !data ||
+          !data.success
+        ){
+
+          alert(
+            data.message ||
+            'Unable to load admin.'
+          );
+
+          logout();
+          return;
+        }
+
+        adminData =
+          data;
+
+        renderAdminDashboard(
+          data
+        );
+
+      }
+    )
+    .withFailureHandler(
+      function(error){
+
+        alert(
+          error.message ||
+          'Admin error.'
+        );
+
+      }
+    )
+    .getAdminDashboard(
+      sessionToken
+    );
+
+}
+
+
+function renderAdminDashboard(data){
+
+  document
+    .getElementById('adminStudentCount')
+    .textContent =
+    data.students.length;
+
+  document
+    .getElementById('adminAttendanceCount')
+    .textContent =
+    data.attendance.length;
+
+  document
+    .getElementById('adminTestCount')
+    .textContent =
+    data.tests.length;
+
+  document
+    .getElementById('adminResultCount')
+    .textContent =
+    data.results.length;
+
+
+  populateStudentSelects(
+    data.students
+  );
+
+  renderAdminStudents(
+    data.students
+  );
+
+  renderAdminAttendance(
+    data.attendance
+  );
+
+  renderAdminTests(
+    data.tests
+  );
+
+  renderAdminResults(
+    data.results
+  );
+
+
+  const today =
+    new Date()
+      .toISOString()
+      .slice(0,10);
+
+  if(
+    !document.getElementById(
+      'attendanceDate'
+    ).value
+  ){
+
+    document
+      .getElementById(
+        'attendanceDate'
+      ).value =
+      today;
+  }
+
+  if(
+    !document.getElementById(
+      'testDate'
+    ).value
+  ){
+
+    document
+      .getElementById(
+        'testDate'
+      ).value =
+      today;
+  }
+
+  if(
+    !document.getElementById(
+      'resultDate'
+    ).value
+  ){
+
+    document
+      .getElementById(
+        'resultDate'
+      ).value =
+      today;
+  }
+
+}
+
+
+function populateStudentSelects(
+  students
+){
+
+  const ids = [
+    'attendanceStudent',
+    'testStudent',
+    'resultStudent'
+  ];
+
+
+  ids.forEach(function(id){
+
+    const select =
+      document.getElementById(id);
+
+    let html =
+      '<option value="">Select Student</option>';
+
+
+    students.forEach(function(student){
+
+      html +=
+        '<option value="' +
+        safeAttr(student.id) +
+        '">' +
+
+        safe(student.id) +
+        ' — ' +
+        safe(student.name) +
+
+        '</option>';
+
+    });
+
+
+    select.innerHTML =
+      html;
+
+  });
+
+}
+
+
+function renderAdminStudents(
+  students
+){
+
+  const body =
+    document.getElementById(
+      'adminStudentsBody'
+    );
+
+  if(
+    students.length === 0
+  ){
+
+    body.innerHTML =
+      '<tr><td colspan="6">No students</td></tr>';
+
+    return;
+  }
+
+
+  let html = '';
+
+
+  students.forEach(function(student){
+
+    html +=
+      '<tr>' +
+
+      '<td>' +
+      safe(student.id) +
+      '</td>' +
+
+      '<td>' +
+      safe(student.name) +
+      '</td>' +
+
+      '<td>' +
+      safe(student.className) +
+      '</td>' +
+
+      '<td>' +
+      safe(student.username) +
+      '</td>' +
+
+      '<td>' +
+      safe(student.status) +
+      '</td>' +
+
+      '<td>' +
+
+      '<div class="admin-actions">' +
+
+      '<button ' +
+      'class="small-btn" ' +
+      'onclick="editStudent(\'' +
+      safeJs(student.id) +
+      '\')">' +
+      '✏️ Edit' +
+      '</button>' +
+
+      '<button ' +
+      'class="small-btn" ' +
+      'onclick="resetPassword(\'' +
+      safeJs(student.id) +
+      '\')">' +
+      '🔑 Reset Password' +
+      '</button>' +
+
+      '</div>' +
+
+      '</td>' +
+
+      '</tr>';
+
+  });
+
+
+  body.innerHTML =
+    html;
+}
+
+
+function renderAdminAttendance(
+  records
+){
+
+  const body =
+    document.getElementById(
+      'adminAttendanceBody'
+    );
+
+  if(
+    records.length === 0
+  ){
+
+    body.innerHTML =
+      '<tr><td colspan="6">No attendance records</td></tr>';
+
+    return;
+  }
+
+
+  let html = '';
+
+
+  records.forEach(function(item){
+
+    html +=
+      '<tr>' +
+
+      '<td>' +
+      safe(item.date) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.studentId) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.name) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.className) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.status) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.remarks) +
+      '</td>' +
+
+      '</tr>';
+
+  });
+
+
+  body.innerHTML =
+    html;
+}
+
+
+function renderAdminTests(
+  tests
+){
+
+  const body =
+    document.getElementById(
+      'adminTestsBody'
+    );
+
+  if(
+    tests.length === 0
+  ){
+
+    body.innerHTML =
+      '<tr><td colspan="7">No tests</td></tr>';
+
+    return;
+  }
+
+
+  let html = '';
+
+
+  tests.forEach(function(item){
+
+    html +=
+      '<tr>' +
+
+      '<td>' +
+      safe(item.id) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.studentId) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.testName) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.subject) +
+      '</td>' +
+
+      '<td>' +
+      item.marks +
+      '/' +
+      item.maxMarks +
+      '</td>' +
+
+      '<td>' +
+      item.percentage +
+      '%' +
+      '</td>' +
+
+      '<td>' +
+      safe(item.date) +
+      '</td>' +
+
+      '</tr>';
+
+  });
+
+
+  body.innerHTML =
+    html;
+}
+
+
+function renderAdminResults(
+  results
+){
+
+  const body =
+    document.getElementById(
+      'adminResultsBody'
+    );
+
+  if(
+    results.length === 0
+  ){
+
+    body.innerHTML =
+      '<tr><td colspan="8">No results</td></tr>';
+
+    return;
+  }
+
+
+  let html = '';
+
+
+  results.forEach(function(item){
+
+    html +=
+      '<tr>' +
+
+      '<td>' +
+      safe(item.id) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.studentId) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.exam) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.subject) +
+      '</td>' +
+
+      '<td>' +
+      item.marks +
+      '/' +
+      item.maxMarks +
+      '</td>' +
+
+      '<td>' +
+      item.percentage +
+      '%' +
+      '</td>' +
+
+      '<td>' +
+      safe(item.grade) +
+      '</td>' +
+
+      '<td>' +
+      safe(item.date) +
+      '</td>' +
+
+      '</tr>';
+
+  });
+
+
+  body.innerHTML =
+    html;
+}
+
+
+/* =========================================================
+   ADD STUDENT
+========================================================= */
+
+function addStudent(){
+
+  const name =
+    document
+      .getElementById(
+        'newStudentName'
+      )
+      .value
+      .trim();
+
+  const studentClass =
+    document
+      .getElementById(
+        'newStudentClass'
+      )
+      .value;
+
+
+  if(!name){
+
+    document
+      .getElementById(
+        'studentMessage'
+      )
+      .textContent =
+      'Student name required.';
+
+    return;
+  }
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(result){
+
+        document
+          .getElementById(
+            'studentMessage'
+          )
+          .textContent =
+          'Student added successfully.';
+
+        document
+          .getElementById(
+            'newStudentName'
+          )
+          .value = '';
+
+        document
+          .getElementById(
+            'newStudentClass'
+          )
+          .value = '';
+
+        showPassword(
+          result.student.password
+        );
+
+        loadAdminDashboard();
+
+      }
+    )
+    .withFailureHandler(
+      showError
+    )
+    .addStudent(
+      sessionToken,
+      name,
+      studentClass
+    );
+
+}
+
+
+/* =========================================================
+   EDIT STUDENT
+========================================================= */
+
+function editStudent(studentId){
+
+  const student =
+    adminData.students.find(
+      function(s){
+        return s.id === studentId;
+      }
+    );
+
+  if(!student){
+    return;
+  }
+
+
+  const name =
+    prompt(
+      'Student name:',
+      student.name
+    );
+
+  if(
+    name === null
+  ){
+    return;
+  }
+
+
+  const studentClass =
+    prompt(
+      'Class:',
+      student.className
+    );
+
+  if(
+    studentClass === null
+  ){
+    return;
+  }
+
+
+  const status =
+    confirm(
+      'OK = Active\nCancel = Inactive'
+    )
+      ? 'Active'
+      : 'Inactive';
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(){
+
+        loadAdminDashboard();
+
+      }
+    )
+    .withFailureHandler(
+      showError
+    )
+    .updateStudent(
+      sessionToken,
+      studentId,
+      name,
+      studentClass,
+      status
+    );
+
+}
+
+
+/* =========================================================
+   RESET PASSWORD
+========================================================= */
+
+function resetPassword(studentId){
+
+  if(
+    !confirm(
+      'Is student ka password reset karna hai?'
+    )
+  ){
+    return;
+  }
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(result){
+
+        showPassword(
+          result.password
+        );
+
+      }
+    )
+    .withFailureHandler(
+      showError
+    )
+    .resetStudentPassword(
+      sessionToken,
+      studentId
+    );
+
+}
+
+
+/* =========================================================
+   PASSWORD POPUP
+========================================================= */
+
+function showPassword(password){
+
+  generatedPasswordValue =
+    password;
+
+  document
+    .getElementById(
+      'generatedPassword'
+    )
+    .textContent =
+    password;
+
+  document
+    .getElementById(
+      'passwordPopup'
+    )
+    .classList.add('active');
+
+}
+
+
+function closePasswordPopup(){
+
+  document
+    .getElementById(
+      'passwordPopup'
+    )
+    .classList.remove('active');
+
+}
+
+
+function copyGeneratedPassword(){
+
+  if(
+    navigator.clipboard
+  ){
+
+    navigator.clipboard
+      .writeText(
+        generatedPasswordValue
+      )
+      .then(
+        function(){
+
+          alert(
+            'Password copied.'
+          );
+
+        }
+      );
+
+  }
+
+}
+
+
+/* =========================================================
+   ATTENDANCE
+========================================================= */
+
+function saveAttendance(){
+
+  const studentId =
+    document
+      .getElementById(
+        'attendanceStudent'
+      )
+      .value;
+
+  const date =
+    document
+      .getElementById(
+        'attendanceDate'
+      )
+      .value;
+
+  const status =
+    document
+      .getElementById(
+        'attendanceStatus'
+      )
+      .value;
+
+  const remarks =
+    document
+      .getElementById(
+        'attendanceRemarks'
+      )
+      .value;
+
+
+  if(
+    !studentId ||
+    !date
+  ){
+
+    alert(
+      'Student aur date select karo.'
+    );
+
+    return;
+  }
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(result){
+
+        alert(
+          result.message
+        );
+
+        loadAdminDashboard();
+
+      }
+    )
+    .withFailureHandler(
+      showError
+    )
+    .saveAttendance(
+      sessionToken,
+      studentId,
+      date,
+      status,
+      remarks
+    );
+
+}
+
+
+/* =========================================================
+   TEST
+========================================================= */
+
+function saveTest(){
+
+  const studentId =
+    document
+      .getElementById(
+        'testStudent'
+      )
+      .value;
+
+  const testName =
+    document
+      .getElementById(
+        'testName'
+      )
+      .value;
+
+  const subject =
+    document
+      .getElementById(
+        'testSubject'
+      )
+      .value;
+
+  const maxMarks =
+    document
+      .getElementById(
+        'testMax'
+      )
+      .value;
+
+  const marks =
+    document
+      .getElementById(
+        'testMarks'
+      )
+      .value;
+
+  const date =
+    document
+      .getElementById(
+        'testDate'
+      )
+      .value;
+
+  const remarks =
+    document
+      .getElementById(
+        'testRemarks'
+      )
+      .value;
+
+
+  if(
+    !studentId ||
+    !testName ||
+    !subject ||
+    !maxMarks ||
+    marks === ''
+  ){
+
+    alert(
+      'Required test details fill karo.'
+    );
+
+    return;
+  }
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(){
+
+        alert(
+          'Test marks saved.'
+        );
+
+        loadAdminDashboard();
+
+      }
+    )
+    .withFailureHandler(
+      showError
+    )
+    .saveTest(
+      sessionToken,
+      studentId,
+      testName,
+      subject,
+      maxMarks,
+      marks,
+      date,
+      remarks
+    );
+
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+function saveResult(){
+
+  const studentId =
+    document
+      .getElementById(
+        'resultStudent'
+      )
+      .value;
+
+  const exam =
+    document
+      .getElementById(
+        'resultExam'
+      )
+      .value;
+
+  const subject =
+    document
+      .getElementById(
+        'resultSubject'
+      )
+      .value;
+
+  const marks =
+    document
+      .getElementById(
+        'resultMarks'
+      )
+      .value;
+
+  const maxMarks =
+    document
+      .getElementById(
+        'resultMax'
+      )
+      .value;
+
+  const grade =
+    document
+      .getElementById(
+        'resultGrade'
+      )
+      .value;
+
+  const date =
+    document
+      .getElementById(
+        'resultDate'
+      )
+      .value;
+
+  const remarks =
+    document
+      .getElementById(
+        'resultRemarks'
+      )
+      .value;
+
+
+  if(
+    !studentId ||
+    !exam ||
+    !subject ||
+    marks === '' ||
+    !maxMarks
+  ){
+
+    alert(
+      'Required result details fill karo.'
+    );
+
+    return;
+  }
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(){
+
+        alert(
+          'Result saved.'
+        );
+
+        loadAdminDashboard();
+
+      }
+    )
+    .withFailureHandler(
+      showError
+    )
+    .saveResult(
+      sessionToken,
+      studentId,
+      exam,
+      subject,
+      marks,
+      maxMarks,
+      grade,
+      date,
+      remarks
+    );
+
+}
+
+
+/* =========================================================
+   MATERIAL
+========================================================= */
+
+function saveMaterial(){
+
+  const title =
+    document
+      .getElementById(
+        'materialTitle'
+      )
+      .value;
+
+  const studentClass =
+    document
+      .getElementById(
+        'materialClass'
+      )
+      .value;
+
+  const subject =
+    document
+      .getElementById(
+        'materialSubject'
+      )
+      .value;
+
+  const url =
+    document
+      .getElementById(
+        'materialUrl'
+      )
+      .value;
+
+  const description =
+    document
+      .getElementById(
+        'materialDescription'
+      )
+      .value;
+
+
+  if(!title){
+
+    alert(
+      'Material title required.'
+    );
+
+    return;
+  }
+
+
+  google.script.run
+    .withSuccessHandler(
+      function(){
+
+        alert(
+          'Study material added.'
+        );
+
+        document
+          .getElementById(
+            'materialTitle'
+          )
+          .value = '';
+
+        document
+          .getElementById(
+            'materialUrl'
+          )
+          .value = '';
+
+        document
+          .getElementById(
+            'materialDescription'
+          )
+          .value = '';
+
+        loadAdminDashboard();
+
+      }
+    )
+    .withFailureHandler(
+      showError
+    )
+    .saveMaterial(
+      sessionToken,
+      title,
+      studentClass,
+      subject,
+      url,
+      description
+    );
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+  const token =
+    sessionToken;
+
+  sessionToken = null;
+  currentUserType = null;
+
+  document
+    .getElementById(
+      'studentDashboard'
+    )
+    .classList.remove(
+      'active'
+    );
+
+  document
+    .getElementById(
+      'adminDashboard'
+    )
+    .classList.remove(
+      'active'
+    );
+
+
+  if(token){
+
+    google.script.run
+      .logoutUser(token);
+
+  }
+
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function showError(error){
+
+  alert(
+    error &&
+    error.message
+      ? error.message
+      : 'Something went wrong.'
+  );
+
+}
+
+
+function safe(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+    return '';
+  }
+
+  return String(value)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
+
+
+function safeAttr(value){
+
+  return safe(value);
+}
+
+
+function safeJs(value){
+
+  return String(value)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'")
+    .replace(/"/g,'\\"');
+}
+
+
+/* =========================================================
+   TOP BUTTON
+========================================================= */
+
+const topBtn =
+  document.getElementById(
+    'topBtn'
+  );
+
+window.addEventListener(
+  'scroll',
+  function(){
+
+    if(
+      window.scrollY > 500
+    ){
+
+      topBtn.style.display =
+        'block';
+
+    }else{
+
+      topBtn.style.display =
+        'none';
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   YEAR
+========================================================= */
+
+document
+  .getElementById('year')
+  .textContent =
+  new Date()
+    .getFullYear();
+
+
+</script>
+
+</body>
+</html>
